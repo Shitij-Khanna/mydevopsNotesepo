@@ -1,0 +1,174 @@
+: 
+https://ryanstutorials.net/linuxtutorial/
+regex : https://ryanstutorials.net/regular-expressions-tutorial/
+script : https://ryanstutorials.net/bash-scripting-tutorial/
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+->> Filters:
+head [-number of lines to print] [path]
+head -10 <filename>    // read top 10 lines of file
+
+tail [-number of lines to print] [path]
+tail -10 <filename>   // read last 10 lines of file
+
+sort [-options] [path]
+Sort will sort it's input, nice and simple. By default it will sort alphabetically but there are many options available to modify the sorting mechanism. Be sure to check out the man page to see everything it may do.
+sort releaseNotes.txt
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+nl:
+nl stands for number lines and it does just that.
+nl [-options] [path]
+nl linux.txt
+nl -s '. ' -w 10 mysampledata.txt
+In the above example we have used 2 command line options. The first one -s specifies what should be printed after the number while the second one -w specifies how much padding to put before the numbers. For the first one we needed to include a space as part of what was printed. Because spaces are normally used as separator characters on the command line we needed a way of specifying that the space was part of our argument and not just inbetween arguments. We did that by including the argument surrounded by quotes.
+
+wc : wordcount
+wc [-options] [path]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- cut:
+cut is a nice little program to use if your content is separated into fields (columns) and you only want certain fields.
+In our sample file we have our data in 3 columns, the first is a name, the second is a fruit and the third an amount. Let's say we only wanted the first column.
+-- cut -f 1 -d ' ' linux.txt
+cut defaults to using the TAB character as a separator to identify fields. In our file we have used a single space instead so we need to tell cut to use that instead. The separator character may be anything you like, for instance in a CSV file the separator is typically a comma ( , ). This is what the -d option does (we include the space within single quotes so it knows this is part of the argument). The -f option allows us to specify which field or fields we would like. If we wanted 2 or more fields then we separate them with a comma as below.
+-- cut -f 1,2 -d ' ' mysampledata.txt
+cd /c/ecidocs/settlement
+$ cut -f 1,2,3,4 -d ',' settlement_detail_report_batch_28.csv
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+sed :
+sed stands for Stream Editor and it effectively allows us to do a search and replace on our data. It is quite a powerful command but we will use it here in it's basic format.
+A basic expression is of the following format:
+s/search/replace/g
+sed <expression> [path]
+The initial s stands for substitute and specifies the action to perform (there are others but for now we'll keep it simple). Then between the first and second slashes ( / ) we place what it is we are searching for. Then between the second and third slashes, what it is we wish to replace it with. The g at the end stands for global and is optional. If we omit it then it will only replace the first instance of search on each line. With the g option we will replace every instance of search that is on each line
+-- sed 's/oranges/bananas/g' mysampledata.txt
+It's important to note that sed does not identify words but strings of characters. Try running the example above yourself but replacing oranges with es and you'll see what I mean. The search term is also actually something called a regular expression which is a means to define a pattern
+--  sed 's/shitij/shitijkhanna/g' error-localhost-ES1-appserver0.log
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+uniq :
+uniq stands for unique and it's job is to remove duplicate lines from the data. One limitation however is that those lines must be adjacent (ie, one after the other). 
+uniq mysampledata.txt
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+egrep :
+To identify every line which contained the string mellon
+egrep 'mellon' mysampledata.txt
+
+egrep -n 'mellon' mysampledata.txt
+
+Regular expressions : 
+. (dot) - a single character.
+? - the preceding character matches 0 or 1 times only.
+* - the preceding character matches 0 or more times.
++ - the preceding character matches 1 or more times.
+{n} - the preceding character matches exactly n times.
+{n,m} - the preceding character matches at least n times and not more than m times.
+[agd] - the character is one of those included within the square brackets.
+[^agd] - the character is not one of those included within the square brackets.
+[c-f] - the dash within the square brackets operates as a range. In this case it means either the letters c, d, e or f.
+() - allows us to group several characters to behave as one.
+| (pipe symbol) - the logical OR operation.
+\s - any whitespace character
+^ - matches the beginning of the line.
+$ - matches the end of the line.
+
+-- Let's say we wish to identify any line with two or more vowels in a row. In the example below the multiplier {2,} applies to the preceding item which is the range.
+egrep '[aeiou]{2,}' mysampledata.txt
+
+How about any line with a 2 on it which is not the end of the line. In this example the multiplier + applies to the . which is any character.
+egrep '2.+' mysampledata.txt
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Wildcards:
+
+Here is the basic set of wildcards:
+* - represents zero or more characters
+? - represents a single character
+[] - represents a range of characters
+
+e.g. 
+/c/MyDocs/Neha
+ls Neha* // lists all files starting with 'Neha'
+ls b*
+The mechanism here is actually kinda interesting. On first glance you may assume that the command above ( ls ) receives the argument b* then proceeds to translate that into the required matches. It is actually bash (The program that provides the command line interface) that does the translation for us. When we offer it this command it sees that we have used wildcards and so, before running the command ( in this case ls ) it replaces the pattern with every file or directory (ie path) that matches that pattern. We issue the command:
+
+  ls b*
+Then the system translates this into:
+
+ls barry.txt blah.txt bob
+and then executes the program. The program never sees the wildcards and has no idea that we used them. This is funky as it means we can use them on the command line whenever we want. We are not limited to only certain programs or situations.
+--- Every file with an extension of txt at the end. In this example we have used an absolute path. Wildcards work just the same if the path is absolute or relative.
+-- ls /home/ryan/linuxtutorialwork/*.txt
+--  ls /c/MyDocs/Neha/*.txt
+
+--- Now let's introduce the ? operator. In this example we are looking for each file whose second letter is i. As you can see, the pattern can be built up using several wildcards.
+  ls ?i* 
+  ls -l ??e*  // all files with 3rd letter as 'e' // '?' represents a single character, so adding a single ? means one character at beginning, two ? means there are 2 characters at beginning
+  ls -l ?e* // all files with 2nd character as 'e'
+--- Or how about every file with a three letter extension. Note that video.mpeg is not matched as the path name must match the given pattern exactly. 
+  ls *.???  // all files with an extension of 3 characters (3 chars after dot)
+  ls *.?? // files with extension of 2 chars
+  
+ --And finally the range operator ( [ ] ). Unlike the previous 2 wildcards which specified any character, the range operator allows you to limit to a subset of characters. In this example we are looking for every file whose name either begins with a s or v.
+  ls [sv]*
+  ls -l [P]* // files starting with P
+  ls -l [PN]* // files starting with P or N
+
+  ls [sv]* // files starting with s or v
+ With ranges we may also include a set by using a hyphen. So for example if we wanted to find every file whose name includes a digit in it we could do the following:
+ ls *[0-9]* //
+ We may also reverse a range using the caret ( ^ ) which means look for any character which is not one of the following.
+ We may also reverse a range using the caret ( ^ ) which means look for any character which is not one of the following.
+ ls [^a-k]* // files not starting with characters from a-k
+   ls [^aBPj]* // files not starting with a,B,P,job
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   
+Real world examples : 
+Move all files of type either jpg or png (image files) into another directory.
+
+mv /c/MyDocs/Neha/*.??g c/ecidocs/settlement  // moves all files with extension in directory /mydocs/neha ending with 'g' to another directory     
+ls -lh /home/*/.bash_history // Find out the size and modification time of the .bash_history file in every users home directory. (.bash_history is a file in a typical users home directory that keeps a history of commands the user has entered on the command line. Remember how the . means it is a hidden file?) As you can see in this example, we may use wildcards at any point in the path.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Every program we run on the command line automatically has three data streams connected to it.
+
+STDIN (0) - Standard input (data fed into the program)
+STDOUT (1) - Standard output (data printed by the program, defaults to the terminal)
+STDERR (2) - Standard error (for error messages, also defaults to the terminal)
+
+--- Redirecting to a File :
+The greater than operator ( > ) indicates to the command line that we wish the programs output (or whatever it sends to STDOUT) to be saved in a file instead of printed to the screen.
+ls
+gives -- > barry.txt bob example.png firstfile foo1 video.mpeg
+ls > myoutput
+ls
+gives -- > barry.txt bob example.png firstfile foo1 myoutput video.mpeg
+
+Let's break it down:
+
+ls 
+-- Let's start off by seeing what's in our current directory.
+ls > myoutput 
+-- Now we'll run the same command but this time we use the > to tell the terminal to save the output into the file myoutput. You'll notice that we don't need to create the file before saving to it. The terminal will create it automatically if it does not exist.
+ls
+As you can see, our new file has been created.
+cat myoutput
+Let's have a look at what was saved in there.
+
+--- Saving to an Existing File
+If we redirect to a file which does not exist, it will be created automatically for us. If we save into a file which already exists, however, then it's contents will be cleared, then the new output saved to it.
+-- wc -l barry.txt > myoutput  // will override the myoutput file with the result of this command
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+PROCESSES:
+
+See what is running:
+--> top
+--- killing a process :
+ ps aux | grep 'firefox'
+ kill <processid>
+
+ Sometimes you are lucky and just running kill normally will get the process to stop and exit. When you do this kill sends the default signal ( 1 ) to the process which effectively asks the process nicely to quit. We always try this option first as a clean quit is the best option. Sometimes this does not work however. In the example above we ran ps again and saw that the process was still running. No worries, we can run kill again but this time supply a signal of 9 which effectively means, go in with a sledge hammer and make sure the process is well and truly gone.
+ 
+kill -9 6978
+
+ 
+ 
+
+.
