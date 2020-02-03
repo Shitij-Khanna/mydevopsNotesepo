@@ -1,0 +1,340 @@
+Play with docker:
+Cloud docker machines:
+https://labs.play-with-docker.com/p/bjsd511lhjkg009e7t9g#bjsd511l_bjsd58hlhjkg009e7tag
+
+Very important link for scenarios:
+https://www.katacoda.com/courses/docker
+
+https://towardsdatascience.com/pump-up-the-volumes-data-in-docker-a21950a8cd8
+
+docker images
+docker container
+
+Error starting userland proxy: Such error sometimes comes using docker : -> > ()
+Open CLI in admin mode
+restart docker service from services.exe
+C:\Program Files\Docker\Docker
+execute docker-for-windows.exe again
+
+list all containers :
+docker container ls
+
+
+Run a container : 
+--- docker container run -p  9090:8080 webapp
+Here, the name of image is 'webapp'. 9090 is the port exposed to the outside world, whereas 8080 is the port inside the container on which the app is running.
+Run after this : http://localhost:9090/ and see webapp running
+In this syntax, 9090 is the port which we enter on the browser and it gets forwarded to port 8080 in the container
+
+-- Run a container in a DETACHED way, i.e. do not attach the output just below in the console when u run a container
+--docker container run -d -p 9080:8080 webapp
+
+Pull an image from docker hub:
+docker pull <imagename>
+docker pull ubuntu
+docker image pull ubuntu -- same as above
+
+-->Show running containers -- A container is a process
+docker ps // same as ' docker container ls'
+docker ps -a  //shows all containers even those which have been stopped
+
+-->Show docker images : 
+docker image ls
+
+-->When a server is run in docker container, it is required to specify a port
+Ubuntu is not a server, so running ubuntu will not require a port
+
+docker run ubuntu // the container stops soon after starting...container keeps running till the time the command specified in the container is running.
+to run ubuntu ---
+docker container run -it ubuntu
+exit ubuntu : exit
+
+-->Delete all containers : 
+docker container prune
+
+-->Logs of container:   Shows the logs of container logged in console
+docker container logs <container id>
+
+Execute a command in a container : 
+docker container exec containerid <command>
+docker container exec containerid bash
+docker container exec -it <containerid> bash    // interactive command connected to our terminal
+
+--> Create a new image from a container - take snapshot from a running container to form an image:
+docker container commit -a "Authorname" <id> myimageName
+docker container commit -a "Shitij Khanna" 534grtyrtyr345 myjdkimage    // imagename in lowercases 
+a0028ddb6fa6 - kibana
+298509fe68b9 : elastic
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+We can also create images using docker file
+
+-->> Docker FILE:
+We cannot change existing images,hence we take an existing image, create a running container of it
+Add content to the container / image
+And create a new image of it
+
+MY-SQL image:
+docker container run -e MYSQL_ROOT_PASSWORD=password -d mysql:5     //Pass environment variables using -e and keyvalue pairs //pulls and runs mysql container
+docker container exec -it <mysql container id> bash  // executes the command bash on mysql container, and bash terminal opens up
+mysql -uroot -ppassword   // connects to mysql command line 
+docker container stop <mysqlcontainerid>
+docker container run -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=shitijDB -d mysql:5 // start again   (mysql:5 is the image name, it will start a new container now)
+													//MYSQL_DATABASE=shitijDB this env variable creates a database in mysql with this name while starting the mysql container
+
+Now run container of spring boot app --
+then execute command on app:
+docker container exec -it 8553943b1af3 sh
+ping <name of container of mysql , i.e keen_davinci> -- it gives bad address unless u create a network and run it on container
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------													
+-->NETWORKING:
+docker network ls   // 3 by default
+docker network create <name>   //create network
+docker network create my-network 
+Start a container on network:
+Start the mysql container on my network:
+--> docker container run --network my-network --name=MyMySqlContainer -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=fleetman -d mysql:5    //--name=MyMySqlContainer gives this name to the container for future reference
+docker container run --network my-network --name=myspringcontainer itemservicecatalog1 itemservicecatalog1 
+Use the docker network rm command to remove a user-defined bridge network. If containers are currently connected to the network, disconnect them first.
+--> docker network rm my-net
+
+---Disconnect a container from a user-defined bridge
+To disconnect a running container from a user-defined bridge, use the docker network disconnect command. The following command disconnects the my-nginx container from the my-net network.
+--docker network disconnect my-net my-nginx
+
+---> Run exec commannd using name:
+docker container exec -t myspringcontainer1 sh
+
+now,
+ping MyMySqlContainer //// we get a response...so we have connected to the mysql container internally from docker.this my sql container is not accessible to the outer world apart from this network where both containers are running
+
+Remove container :
+docker container rm <nameofcontainer>
+docker container run -d -p 8080:8080 --network my-network --name mycontainername --rm  myimageName // --rm means that when this is stopped it will be removed
+
+Add mysql package manager in alpine container of linux :
+apk add --no-cache mysql-client
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Volumes and Mounts :
+Inspect a container:
+docker container inspect <containerid>
+
+  "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "b1e32f9f441f51e756779ce7b7135070caf9651b552130629ff89eb08556b57f",
+                "Source": "/var/lib/docker/volumes/b1e32f9f441f51e756779ce7b7135070caf9651b552130629ff89eb08556b57f/_data",
+                "Destination": "/var/lib/mysql",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+		
+// Data of the container gets stored on the host system, if the command volume is present in the docker file of the image of that container
+// when we docker inspect the container, we get the detail in json, i.e. MOUNT -> shown above
+// in mount -> we have the destination : which refers to the location where the data of the container got stored in the container. In our case, if we created a table on the mysql container before removing the container, the data is means that database with that table		
+//source : refers to the location on the host computer where the data got stored
+// here: "Source": "/var/lib/docker/volumes/b1e32f9f441f51e756779ce7b7135070caf9651b552130629ff89eb08556b57f/_data", in ;inux systems we can see this directly
+in windows, SOURCE is the file system of the virtual machine we are running in the background
+
+
+we can inspect the volume as well:
+docker volume ls
+docker volume prune // to delete all volumes
+
+Start a container with a volume
+If you start a container with a volume that does not yet exist, Docker creates the volume for you. The following example mounts the volume myvol2 into /app/ in the container.
+
+The -v and --mount examples below produce the same result. You can’t run them both unless you remove the devtest container and the myvol2 volume after running the first one.
+-- docker run -d --name devtest -v myvol2:/app nginx:latest
+Use docker inspect devtest to verify that the volume was created and mounted correctly. Look for the Mounts section:
+// elasticdata : 
+ 
+Result :
+   "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "myvol2",
+                "Source": "/var/lib/docker/volumes/myvol2/_data",
+                "Destination": "/app",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+This shows that the mount is a volume, it shows the correct source and destination, and that the mount is read-write.
+
+Stop the container and remove the volume. Note volume removal is a separate step.		
+docker container stop devtest
+docker container rm devtest
+docker volume rm myvol2		
+
+--> Start a service with volumes
+When you start a service and define a volume, each service container uses its own local volume. None of the containers can share this data if you use the local volume driver, but some volume drivers do support shared storage. Docker for AWS and Docker for Azure both support persistent storage using the Cloudstor plugin.
+
+The following example starts a nginx service with four replicas, each of which uses a local volume called myvol2:
+when in docker swarm: 
+docker service create -d --replicas=4 --name devtest-service --mount source=myvol2,target=/app nginx:latest
+
+Check the created service :
+docker service ps devtest-service
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+miw6w21hcs21        devtest-service.1   nginx:latest        docker-desktop      Running             Running 17 seconds ago
+vep5exx540z0        devtest-service.2   nginx:latest        docker-desktop      Running             Running 17 seconds ago
+eevq7omp0ghm        devtest-service.3   nginx:latest        docker-desktop      Running             Running 17 seconds ago
+x8n6eeblegmv        devtest-service.4   nginx:latest        docker-desktop      Running             Running 17 seconds ago
+
+Check the volumes of the services/replicas created : 
+docker inspect miw6w21hcs21
+  "Mounts": [
+                    {
+                        "Type": "volume",
+                        "Source": "myvol2",
+                        "Target": "/app"
+                    }
+                ],
+   "Mounts": [
+                    {
+                        "Type": "volume",
+                        "Source": "myvol2",
+                        "Target": "/app"
+                    }
+                ],
+     "Mounts": [
+                    {
+                        "Type": "volume",
+                        "Source": "myvol2",
+                        "Target": "/app"
+                    }
+                ],			
+All containers are mapped to volume 'myvol2' and mapped to the directory '/app' in the container		
+
+--- Remove the service, which stops all its tasks:		
+docker service rm devtest-service
+
+The docker service create command does not support the -v or --volume flag. When mounting a volume into a service’s containers, you must use the --mount flag.
+
+---- Populate a volume using a container
+If you start a container which creates a new volume, as above, and the container has files or directories in the directory to be mounted (such as /app/ above), the directory’s contents are copied into the volume. The container then mounts and uses the volume, and other containers which use the volume also have access to the pre-populated content.
+
+To illustrate this, this example starts an nginx container and populates the new volume nginx-vol with the contents of the container’s /usr/share/nginx/html directory, which is where Nginx stores its default HTML content
+Docker volumes : 
+https://docs.docker.com/storage/volumes/
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Kibana and elasticsearch:
+docker run -d --rm --name elastic_home -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+docker run  --name kibana -p 5601:5601 --link elastic_home:elastic_home1 -e "ELASTICSEARCH_HOSTS=http://elastic_home1:9200"  docker.elastic.co/kibana/kibana:7.0.0
+
+Run elastic search on my network :
+1. docker network create elasticsearch
+2. docker run --network elasticsearch --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+3. docker run --network elasticsearch --name kibana -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://elasticsearch:9200" docker.elastic.co/kibana/kibana:7.0.0
+4. docker run --network elasticsearch --name=filebeat -v C:/MyDocs/Docker/Filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml -v C:/eserver/projects/eciproject/build/server/share/system/log:/usr/share/logs docker.elastic.co/beats/filebeat:7.0.0
+
+docker run --network elasticsearch --name elasticsearch -p 9200:9200 -p 9300:9300 -v elasticdata:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.3.2
+
+1. docker network create elasticsearch_new
+2. docker run --network elasticsearch_new --name elasticsearch_new -p 9201:9200 -p 9301:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.3.2
+3. docker run --network elasticsearch_new --name kibana_new -p 5602:5601 -e "ELASTICSEARCH_HOSTS=http://elasticsearch_new:9200" docker.elastic.co/kibana/kibana:7.3.2
+4. docker run --network elasticsearch_new --name=filebeat_new -v C:/MyDocs/Docker/Filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml -v C:/eserver/projects/eciproject/build/server/share/system/log:/usr/share/logs docker.elastic.co/beats/filebeat:7.3.2
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Swarm:
+docker swarm init  -- to create a swarm // current node becomes the manager
+docker swarm join --token SWMTKN-1-3f4f0fwqneak5ncolrsmnsd8ouyi0mwieu39i67aw6rnxeg93e-746ktjmmy6h0bonz3iargqp8q 192.168.65.3:2377  // this will be returned after init swarm, and use this command to join the swarm on any other system...
+// using the above command, any other system where docker is installed will be part of swarm, and will be a worker node of the cluster
+
+--- >>> Check the nodes in swarm : 
+docker node ls
+
+--- >>> join as worker :
+docker swarm join-token worker
+join as manager:
+docker swarm join-token manager
+
+--- >>> Create a service on node: 
+Run command from manager node :
+docker service create -p 9080:80 --name helloworld helloworld
+docker service create --replicas 5 -p 9080:80 --name web nginx
+
+--- >>> Check swarm status:
+Docker service ls // gives list of managers and workers available on swarm
+docker service ps web  // check service created on swarm
+
+--- >>> Create services on swarm:
+
+docker network create elknetwork --driver overlay
+docker service create --network elknetwork --name elastic_home -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+docker service create --network elknetwork --name kibana -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://elastic_home:9200" docker.elastic.co/kibana/kibana:7.0.0
+docker service create --network elknetwork --name=filebeat --mount type=volume,source=C:/eserver/projects/eciproject/build/server/share/system/log,target=/usr/share/logs --mount type=volume,source=C:/MyDocs/Docker/Filebeat/filebeat.yml,target=/usr/share/filebeat/filebeat.yml docker.elastic.co/beats/filebeat:7.0.0
+
+docker service create --network elknetwork --name=filebeat --mount source=C:/MyDocs/Docker/Filebeat/filebeat.yml,target=/usr/share/filebeat/filebeat.yml --mount  source=C:/eserver/projects/eciproject/build/server/share/system/log,target=/usr/share/logs docker.elastic.co/beats/filebeat:7.0.0
+
+refer above:
+docker service create -d --replicas=4 --name devtest-service --mount source=myvol2,target=/app nginx:latest
+
+
+//All these services will be managed by the swarm itself, created automatically on available manager/worker nodes
+
+Scale :
+docker service scale web=8
+
+Inspect :
+docker node inspect self
+issue with elastic search in docker-compose : sudo sysctl -w vm.max_map_count=262144
+
+Docker elastic search in compose :
+https://github.com/docker-library/elasticsearch/issues/111
+
+Logstash on docker :
+https://www.elastic.co/guide/en/logstash/current/docker.html
+https://www.elastic.co/guide/en/logstash/current/docker-config.html
+https://www.codementor.io/samueljames/using-docker-with-elasticsearch-logstash-and-kibana-elk-dzucc3c94 --- compose with elastic and kibana also
+http://www.thedreaming.org/2014/11/21/docker-logstash/ -- check this also
+
+
+
+Share environment variables :
+Linked containers on the default bridge network share environment variables.
+Originally, the only way to share environment variables between two containers was to link them using the --link flag. This type of variable sharing is not possible with user-defined networks. However, there are superior ways to share environment variables. A few ideas:
+Multiple containers can mount a file or directory containing the shared information, using a Docker volume.
+Multiple containers can be started together using docker-compose and the compose file can define the shared variables.
+You can use swarm services instead of standalone containers, and take advantage of shared secrets and configs.
+Containers connected to the same user-defined bridge network effectively expose all ports to each other. For a port to be accessible to containers or non-Docker hosts on different networks, that port must be published using the -p or --publish flag.
+
+My repository:
+shitijkhanna/dockerreposhitij
+
+Push a new tag to this repository : 
+docker push shitijkhanna/dockerreposhitij:tagname
+
+CI-CD with docker:
+ -- > Commit code, trigger jenkins job to build image by pulling code from GIT, and executing docker file to build the image by reading the latest code from GIT...
+When image is built, push it to docker registry.... (Build part completes)
+ -- > Trigger deploy job, which pulls the image from the registry and runs the container, on the required Jenkins node (corresponding to the environment)
+
+-->> Push to docker hub:
+Tag Docker image :
+docker image tag <imageidoptional> nameoftag
+docker image tag 976 shitijkhanna/eurekaserver
+After this, we see 2 images with the same id, but with different names : 
+One name would be of the original image, and the second one of the tag
+
+See -> 
+eurekaserver                                    latest              9767a833a24b        3 months ago        145MB
+shitijkhanna/eurekaserver                       latest              9767a833a24b        3 months ago        145MB
+push : 
+docker login (shitijkhanna, Shitij1!)
+docker image push reponame:tagname
+
+ELK server ticket:
+https://novamedia-jira.atlassian.net/browse/BOOKSPOT-655
+
+Minikube:
+https://rharshad.com/kubernetes-minikube-windows-setup/
+New-VMSwitch -Name “myCluster” -AllowManagement $True -NetAdapterName “Ethernet”
+minikube start --vm-driver="hyperv" --hyperv-virtual-switch="myCluster"
+minikube start — vm-driver=hyperv — hyperv-virtual-switch=myCluster
+https://medium.com/containers-101/local-kubernetes-for-windows-minikube-vs-docker-desktop-25a1c6d3b766
