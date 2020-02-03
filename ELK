@@ -1,0 +1,121 @@
+Logstash :
+Install logstash from elasticsearch website :
+
+--cd C:\MyDocs\Docker\ELK\Logstash\logstash-7.1.1
+
+Linux :
+--  bin/logstash -e 'input { stdin{}} output { stdout {}}'  
+Windows: 
+-- C:\MyDocs\Docker\ELK\Logstash\logstash-7.1.1\bin>
+-- Run : logstash.bat -f C:\MyDocs\Docker\ELK\LogstashFilterFile\logstash.conf
+
+Run with an apache logs configuration:
+logstash.bat -f C:\MyDocs\Docker\ELK\LogstashFilterFile\apache.conf
+
+docker run --rm -it -v C:/MyDocs/Docker/ELK/Logstash_CSV/Data/CSV:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.4.0
+docker run -it -v "C:/MyDocs/Docker/ELK/Logstash_CSV/Data/CSV":/config-dir logstash -f /config-dir/logstash-cars.conf
+
+Check the number of docs in index of elasticsearch:
+http://localhost:9200/logstash-*/_count
+
+
+Links:
+https://discuss.elastic.co/t/i-m-failing-in-getting-csv-data-and-index-those-on-elastic-using-logstash-on-windows/158756/4
+https://discuss.elastic.co/t/logstash-unable-to-load-csv-data-into-elasticsearch-on-windows/150964/4
+
+Regex for filebeat :
+https://www.elastic.co/guide/en/beats/filebeat/current/regexp-support.html#escape-sequences
+
+Create index in Elastic search using kibana :
+
+PUT /my_playlist/_doc/2
+{
+ "title" : "3000  years",
+ "artist" : "shitij khanna",
+ "album" : "vampire diaries",
+ "year" : 2015
+}
+
+// creates the index my_playlist and adds the document to it with id = 2
+{
+ "title" : "1000 years",
+ "artist" : "Christina Perri",
+ "album" : "Breaking Dawn",
+ "year" : 2011,
+ "location" : "London"
+}    /// adds a field location to the existing index
+
+GET /my_playlist/_doc/1/_source
+GET /my_playlist/_doc/2/_source
+
+// gets all records
+GET /my_playlist/_search? 
+
+DELETE /my_playlist/song/6
+
+https://medium.com/@victorsmelopoa/an-introduction-to-elasticsearch-with-kibana-78071db3704
+https://www.elastic.co/guide/en/elasticsearch/reference/6.0/search.html
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Filebeat index:
+GET filebeat-7.0.0-2019.09.13-000001/
+GET filebeat-7.0.0-2019.09.13-000001/_doc/aaaiKW0Bv6Oqc_D8oOGo   //aaaiKW0Bv6Oqc_D8oOGo is the id of the document //gives response detail of the searched doc: 
+
+GET filebeat-7.0.0-2019.09.13-000001/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+GET filebeat-7.2.0-2019.09.19-000001/_search
+{
+  "query": { 
+    "bool": { 
+      "filter": [ 
+        { 
+           "match_phrase": {
+            "message": "ERROR atintp007481.nl.novamedia.com"
+        }
+        }
+      ]
+    }
+  }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Search in kibana:
+message :* WARN and message :* at
+
+Filebeat mutiline separation on timestamp : 
+https://www.cloudright.io/notes/timestamp-filebeat-multiline/
+
+Split message into parts to separately index timestamp and log type :
+https://discuss.elastic.co/t/split-log-message-that-harvested-by-filebeat/156577
+
+
+1. docker network create elasticsearch
+2. docker run --network elasticsearch --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+3. docker run --network elasticsearch --name kibana -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://elasticsearch:9200" docker.elastic.co/kibana/kibana:7.0.0 
+4. docker run --network elasticsearch --name=filebeat -v C:/MyDocs/Docker/ELK/Logstashworkspace/filebeat.yml:/usr/share/filebeat/filebeat.yml -v C:/eserver/projects/eciproject/build/server/share/system/log:/usr/share/logs docker.elastic.co/beats/filebeat:7.0.0
+5. docker run --network elasticsearch --name=logstash -v C:/MyDocs/Docker/ELK/Logstash_CSV/Data/CSV/logstash.conf:/usr/share/logstash/config/logstash.conf logstash:7.4.0
+
+
+elasticsearch_new
+Setup pwd :
+A.
+run elastic search container 
+exec into container
+cd /usr/share/elasticsearch/bin in elasticsearch container
+
+B.
+run : 
+elasticsearch-setup-passwords interactive 
+put pwdds for all users...
+
+C. 
+to run kibana with authentication to connect to elastic : 
+
+docker run --network elasticsearch_new --name kibana -p 5602:5601 -e "ELASTICSEARCH_HOSTS=http://elasticsearch_new:9200" -e "ELASTICSEARCH_USERNAME=kibana" -e "ELASTICSEARCH_PASSWORD=welcome"  docker.elastic.co/kibana/kibana:7.3.2
+D.  login into kibana with elastic user, with the pwd set in bash
+
