@@ -1,0 +1,247 @@
+---Kubernetes:
+
+---PODS :
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+spec:
+  containers:
+  - name: webapp
+    image: richardchesterwood/k8s-fleetman-webapp-angular:release0
+	
+PODs are not exposed to the outer world, cannot be accessed by browser
+Pods can run multiple containers in them
+Usually, one main container and the other ones should be the ones supporting the main container.
+to expose pods to the outer world, they need to be connected to services..
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+---Services :	
+-- Services are used to connect to Pods using labels/ select words.
+-- A service can be exposed to the outer world by defining ports to be exposed.
+-- A service can contain labels/selectors, the selector defined in service will lookup for the same label in all the pods, and it will be mapped to the pod where the corresponding label is found.
+
+E.G.
+2 different PODSwith different release tags are defined below. the symbol '---' can be used to separate different entities in a yaml file : 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+    release: "0"
+spec:
+  containers:
+  - name: webapp
+    image: richardchesterwood/k8s-fleetman-webapp-angular:release0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-release-0-5
+  labels:
+    app: webapp
+    release: "0-5"
+spec:
+  containers:
+  - name: webapp
+    image: richardchesterwood/k8s-fleetman-webapp-angular:release0-5	
+	
+---A service can be defined as below, to connect to one of the above pods using selector attribute :
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-webapp
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: webapp
+    release: "0-5"
+
+  ports:
+    - name: http
+      port: 80
+      nodePort: 30080
+
+  type: NodePort
+  
+-----------
+the above service has selectors :  app: webapp and release: "0-5"  , which match to the 2nd pod, hence this service will map to that POD and expose that POD
+If we want to connect to the other POD, we can simply change the selector in the service and deploy the service, then the other POD would be exposed.
+If we want to upgrade the release of the POD, a new POD with a new label in its metadata can be released on DockerHub, and a corresponding POD entry be created in a new yaml file or this POD entry be updated. then the service just needs to connect to the new POD with a small change in the selector label.
+  
+-----------
+Services can be NodePort or Cluster IP types : 
+  -- Node Port is open and exposed, can be accessed by browser 
+  -- Cluster IP is only accessible from the Kubernetes network, for other microservices  
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+
+---ReplicaSet
+
+If a POD is destroyed, it is lost.
+Using Replica Set, a POD can be defined with more than 1 replicas.
+ -- Syntax : 
+    In a POD, there is  metadata and spec. Metadata contains name and label. Spec contains container details
+	In Replica Set, there is spec inside spec, and its own metadata. 
+		In the parent spec, there are no of replicas, the label selector for inner PODs, and template for the PODS. Inside this template, there is inner spec, of the POD, and its metadata.
+	The metadata of replicaset contains its name
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  replicas: 2
+  template: # template for the pods
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: richardchesterwood/k8s-fleetman-webapp-angular:release0-5
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: queue
+  labels:
+    app: queue
+spec:
+  containers:
+  - name: queue
+    image: richardchesterwood/k8s-fleetman-queue:release1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-webapp
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: webapp
+
+  ports:
+    - name: http
+      port: 80
+      nodePort: 30080
+
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-queue
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: queue
+
+  ports:
+    - name: http
+      port: 8161
+      nodePort: 30010
+
+  type: NodePort
+
+kubectl apply -f frontend.yaml
+kubectl apply -f https://kubernetes.io/examples/controllers/frontend.yaml // can also do it with a file on a remote location
+kubectk get rs // get all replica sets
+
+You can also check on the state of the replicaset:
+kubectl describe rs/frontend
+  
+And lastly you can check for the Pods brought up:
+kubectl get Pods  
+
+You can also verify that the owner reference of these pods is set to the frontend ReplicaSet. To do this, get the yaml of one of the Pods running:
+
+kubectl get pods frontend-9si5l -o yaml
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	 
+--- DEPLOYMENTS
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  # minReadySeconds: 30
+  selector:
+    matchLabels:
+      app: webapp
+  replicas: 2
+  template: # template for the pods
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: richardchesterwood/k8s-fleetman-webapp-angular:release0-5
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: queue
+  labels:
+    app: queue
+spec:
+  containers:
+  - name: queue
+    image: richardchesterwood/k8s-fleetman-queue:release1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-webapp
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: webapp
+
+  ports:
+    - name: http
+      port: 80
+      nodePort: 30080
+
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-queue
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: queue
+
+  ports:
+    - name: http
+      port: 8161
+      nodePort: 30010
+
+  type: NodePort
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
