@@ -1,0 +1,302 @@
+GIT:
+https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+https://www.atlassian.com/git/tutorials
+https://guides.github.com/activities/hello-world/ : GIT site
+
+
+
+GIT Commands :
+Create feature branch:
+git checkout -b feature/ECIINTUPG-1968-PaymentService
+
+checkout/ Switch to branch :
+git checkout develop
+
+update code : 
+after checking out/switching to branch, execute : 
+git pull
+
+add new files together:
+git add -A
+
+Add Single file:
+git add fileName
+
+commit files :
+git commit -m 'message'
+
+Push code to central repo after commiting : 
+Git push origin 'my branch name'
+
+Push code to develop branch:
+
+
+rebase : Merge our branch's code with develop branch:
+Switch to our branch
+git rebase develop   (will put develop's changes in our branch)
+
+Check your branches:
+git branch
+
+Reset :
+git reset --hard origin/feature/ECIINTUPG-322-directDebitWithRedirect	
+git reset --hard origin/master ---- This switches the repo to the master branch, pulls the latest commits and resets the repo's local copy of master to match the latest version in origin.
+
+Initialize repository : 
+git init
+
+Add multiple files of same extension:
+git add '*.txt'
+
+Log : 
+git log
+
+Add remote repository (where we will push our local changes) :
+git remote add origin https://github.com/try-git/try_git.git 
+
+Push :
+E.g. : The name of our remote is origin and the default local branch name is master. The -u tells Git to remember the parameters, so that next time we can simply run git push and Git will know what to do. Go ahead and push it!
+git push -u origin master
+
+Difference :
+git diff HEAD
+git diff --staged
+
+Remove staged files:
+git reset fileName
+git reset octofamily/octodog.txt
+
+Revert file changes:
+Files can be changed back to how they were at the last commit by using the command: git checkout -- <target>. Go ahead and get rid of all the changes since the last commit for octocat.txt
+git checkout -- octocat.txt
+
+create branch:
+git branch test
+
+Remove files:
+git rm '*.txt'
+Commit removed files:
+git commit -m 'removed txt files'
+
+Merge feature into test : 
+commit all changes to feature...push changes
+git checkout test
+git merge feature
+
+Delete branch : 
+git branch -d branchName
+
+Abort merge : 
+git merge --abort
+Abort rebase :
+git rebase --abort
+continue rebase after solving conflict :
+git rebase --continue
+
+revert commit if not pushed : 
+git reset head
+
+add files to previous commit : 
+This leaves your working tree (the state of your files on disk) unchanged but undoes the commit and leaves the changes you committed unstaged (so they'll appear as "Changes not staged for commit" in git status, and you'll need to add them again before committing). If you only want to add more changes to the previous commit, or change the commit message1, you could use git reset --soft HEAD~ instead, which is like git reset HEAD~ (where HEAD~ is the same as HEAD~1) but leaves your existing changes staged.
+
+
+https://www.tutorialspoint.com/git/index.htm
+
+Delete branch:
+git push origin --delete {the_remote_branch}
+
+
+Finish branch, with GIT flow extensions:
+git flow feature finish feature_branch
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+The overall flow of Gitflow is:
+
+A develop branch is created from master
+A release branch is created from develop
+Feature branches are created from develop
+When a feature is complete it is merged into the develop branch
+When the release branch is done it is merged into develop and master
+If an issue in master is detected a hotfix branch is created from master
+Once the hotfix is complete it is merged to both develop and master
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+git push -u origin new-feature
+This command pushes new-feature to the central repository (origin), and the -u flag adds it as a remote tracking branch. After setting up the tracking branch, git push can be invoked without any parameters to automatically push the new-feature branch to the central repository. To get feedback on the new feature branch, create a pull request in a repository management solution like Bitbucket Cloud or Bitbucket Server. From there, you can add reviewers and make sure everything is good to go before merging.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Temporarily stash changes
+With a work in progress, things are often in a messy state. So what if you need to switch to a different branch (just for a second!) to work on something else? Git won't let you because you have unsaved changes, and frankly you do not want to commit half-baked work just so that you can come back to it and fix it later. The answer to this dilemma is the git stash command.
+
+Stashing takes the dirty state of your working directory (i.e., your modified tracked files and staged changes) and saves it on a stack of unfinished changes that you can re-apply at any time. Your work is stashed with the following command:
+
+$ git stash
+Saved working directory and index state WIP on feature: 3fc175f fix race condition
+HEAD is now at 3fc175f fix race condition
+The working directory is now clean:
+
+$ git status
+# On branch feature
+nothing to commit, working directory clean
+You can now safely switch branches and work on other stuff. But don't worry, the stashed away commits are still around:
+
+$ git stash list
+stash@{0}: WIP on feature: 3fc175f fix race condition
+Later on, when you are back on the feature branch, you can re-apply all stashed away changes:
+
+$ git stash apply
+git stash apply stash@{0}
+
+$ git stash pop
+On branch feature
+Changes not staged for commit:
+  (use "git add ..." to update what will be committed)
+
+     modified:   index.html
+Dropped refs/stash@{0} (ac2321cc3a33ba712b8e50c99a99d3c20da9d6b8)
+There are a bunch of other handy options when it comes to stashing:
+
+$ git stash save "describe it"   # give the stash a name
+$ git stash clear                # delete a stashed commit
+$ git stash save --keep-index    # stash only unstaged files
+
+Partial stashes
+You can choose to stash just a single file, a collection of files, or individual changes from within files: $ git stash -p or $ git stash --patch.
+
+Viewing stash diffs
+There are two ways to view a stash: to view the full diff of a stash - $ git stash show -p or view only the latest stash - $ git stash show.
+
+Creating a branch from the stash
+Create a new branch to apply your stashed changes to, and then pop your stashed changes onto it: $ git stash branch <branch_name> <stash_id>.
+
+Remove your stash
+Use it with caution, it maybe is difficult to revert. The only way to revert it is if you didn't close the terminal after deleting the stash.
+If you no longer need a particular stash, you can delete it with: $ git stash drop <stash_id>. Or you can delete all of your stashes from the repo with: $ git stash clear.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Clone a specific remote branch
+What if you want to clone only a specific branch from a remote repo? Usually with git clone, you would have to clone all the other branches, too. A handy alternative is to use git remote add:
+
+$ git init  
+$ git remote add -t <remoteBranchName> -f origin <remoteRepoUrlPath>
+$ git checkout <localBranchName>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5. Merge a cherry-picked remote commit with your branch
+Even more wicked, what if you want only a specific commit from a remote repo on your branch? You can use git cherry-pick to cherry-pick the commit with a given SHA and merge it into the current branch:
+
+$ git cherry-pick <commitSHA>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+7. Ignore changes in a tracked file
+If you and your co-workers are operating on the same branch, chances are you are going to git merge or git rebase quite often. However, this may reset your environment-specific configuration files, which you would then have to change after every merge. Instead, you can use the following command to permanently tell git not to touch a certain local file:
+
+$ git update-index --assume-unchanged <pathToLocalFile>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+8. Have git pull running every X seconds, with screen
+Often merge conflicts happen simply because the local repo you are working on does no longer reflect the current state of the remote repo. This is why doing a git pull first thing in the morning might be a good idea. Alternatively, you could have a script running in the background (or using GNU Screen) that calls git pull say every X seconds:
+
+$ screen
+$ for((i=1;i<=10000;i+=1)); do sleep X && git pull; done
+Use Ctrl+a Ctrl+d to detach the screen.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10. Clean
+Sometimes git might be complaining about "untracked working tree files" that would be "overwritten by checkout". This can have a variety of reasons. However, often these issues can be prevented by keeping your working tree clean using the following commands:
+
+$ git clean -f     # remove untracked files
+$ git clean -fd    # remove untracked files/directories
+$ git clean -nfd   # list all files/directories that would be removed
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+12. Who f'ed it all up?
+Finally, when all hell breaks loose, you may find no other way out than to assign blame. If your production server is broken, it is very easy to find the culprit: Just do a git blame. This will reveal for every line in the file the author, the commit hash that saw the last change in that line, and the timestamp of the commit:
+
+$ git blame <fileName>
+But actually... Come to think of it, it might be best to keep this last one to yourself... ;-)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Advanced rebasing:
+https://dzone.com/articles/advanced-git-commands-rewriting-history
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Case 1: Reverting a Single, Local Git Commit
+git revert 1a890e7
+
+Git will prompt you with a new note for this revert commit, giving you a default of:
+
+Revert "Added about-us.htm"
+ 
+This reverts commit 1a890e7980283e348cde0444cabe709f6342a851.
+----------------------------------------------------------------------------
+Case 2: Reverting a Range of Local Git Commits
+To revert all the local actions from “1a890e7” up to “HEAD,” use the following:
+
+git revert 1a890e7..HEAD
+ addcdb4969e68ab9c8c176cfda6b737a44c9d605
+ git revert addcdb4..HEAD
+----------------------------------------------------------------------------
+Case 3: Reverting a Git Commit That Was Pushed
+After you check out the remote repository, you can first use git revert and then push as usual:
+git revert 1a890e7980283e348cde0444cabe709f6342a851
+git push origin
+----------------------------------------------------------------------------
+Case 4: Reverting a Range of Git Commits That Were Pushed
+git revert 98bf04d153c8e19e6a1fb086904d86355a676a15..ed42b2cb55c9d01b06a538a4ca1989bfa4e72661   
+git push origin
+
+Advantages of git revert Over git reset
+Reverting has two important advantages over resetting:
+
+Reverting does not change the project history, which makes it a safer operation for commits that have already been pushed to a shared repository.
+Reverting is able to target an individual commit at an arbitrary point in the history, while if you use git reset, it can only work backward from the current commit.
+----------------------------------------------------------------------------
+
+Advanced:
+https://www.atlassian.com/git/tutorials/advanced-overview
+----------------------------------------------------------------------------
+
+-----  >> Upstream and Downstream:
+Upstream (as related to) Tracking
+The term upstream also has some unambiguous meaning as comes to the suite of GIT tools, especially relative to tracking
+
+For example :
+
+   $git rev-list --count --left-right "@{upstream}"...HEAD
+   >4   12
+will print (the last cached value of) the number of commits behind (left) and ahead (right) of your current working branch, relative to the (if any) currently tracking remote branch for this local branch. It will print an error message otherwise:
+
+    >error: No upstream branch found for ''
+	
+Tag a release :
+git tag -a v1.4 -m "my version 1.4"  -- Annotated tag
+Creating Tags
+Git supports two types of tags: lightweight and annotated.
+
+A lightweight tag is very much like a branch that doesn’t change — it’s just a pointer to a specific commit.
+
+Annotated tags, however, are stored as full objects in the Git database. They’re checksummed; contain the tagger name, email, and date; have a tagging message; and can be signed and verified with GNU Privacy Guard (GPG). It’s generally recommended that you create annotated tags so you can have all this information; but if you want a temporary tag or for some reason don’t want to keep the other information, lightweight tags are available too.
+
+Annotated Tags
+Creating an annotated tag in Git is simple. The easiest way is to specify -a when you run the tag command:
+
+$ git tag -a v1.4 -m "my version 1.4"
+$ git tag
+v0.1
+v1.3
+v1.4
+The -m specifies a tagging message, which is stored with the tag. If you don’t specify a message for an annotated tag, Git launches your editor so you can type it in.
+
+You can see the tag data along with the commit that was tagged by using the git show command:
+
+$ git show v1.4
+tag v1.4
+Tagger: Ben Straub <ben@straub.cc>
+Date:   Sat May 3 20:19:12 2014 -0700
+
+my version 1.4
+
+commit ca82a6dff817ec66f44342007202690a93763949
+Author: Scott Chacon <schacon@gee-mail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the version number
+That shows the tagger information, the date the commit was tagged, and the annotation message before showing the commit information.	
