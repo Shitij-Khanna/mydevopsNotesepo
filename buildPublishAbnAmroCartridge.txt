@@ -1,0 +1,9 @@
+node('master'){
+	stage('stopserver'){
+		bat'netstop"Enfinity_AppServer1"'
+	}stage('buildtba_ac_abnamro_payment'){
+		bat'''setGRADLE_USER_HOME=C: \\Users\\nlshikha\\.gradlecdC: \\eserver\\projects\\eciprojectgradlewtba_ac_abnamro_payment: buildtba_ac_abnamro_payment: publish'''
+	}stage('startserver'){
+		bat'netstart"Enfinity_AppServer1"'
+	}
+}

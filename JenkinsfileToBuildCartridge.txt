@@ -1,0 +1,31 @@
+properties([parameters([booleanParam(defaultValue: true, description: 'Stop the server', name: 'StopServer'), booleanParam(defaultValue: true, description: 'Start the server', name: 'Startserver'), choice(choices: ['  tba_ac_libs\n  tba_app_sf_webshop\n  tba_sld_ch_consumer_plugin\n  tba_as_product_extension\n  tba_sf_services\n  tba_bc_urlrewrite\n  tba_sf_rest\n  tba_search_solr_ext\n  tba_as_basket_extension\n  tba_bc_contract\n  tba_bc_pricing\n  tba_ac_abnamro_payment\n  tba_ac_payment_common\n  tba_app_sf_contactcenter_rest\n  tba_sf_lottery\n  tba_bc_optins_orm\n  tba_bc_optins\n  tba_ac_intersolve\n  tba_ac_ebook\n  tba_ac_intersolve_payment\n  tba_bc_ebook\n  tba_bc_user\n  tba_bc_autocommunications\n  tba_bc_autocommunications_orm\n  tba_bc_membership\n  tba_jc_product_orm\n  tba_ac_clang\n  tba_bc_bankgiroloterij\n  tba_ac_vab\n  tba_ac_centraal_boekhuis\n  dev_storefront\n  tba_app_sf_webshop_test\n  '], description: 'select cartridge to build and publish', name: 'cartridge')])])
+
+def startServer = params.Startserver
+def stopServer = params.StopServer
+
+node('master') {
+    
+    stage('Stop Server'){
+        if (stopServer == true) {
+              echo "Stopping Server"
+              bat 'net stop "Enfinity_AppServer1"'
+        } 
+    }
+   
+    stage('build selected cartridge') {
+        echo "Cartridge selected for building  is : ${params.cartridge}"
+        def cartridgename = "${params.cartridge}"
+        echo "${cartridgename}"
+        bat """
+        set GRADLE_USER_HOME=C:\\Users\\nlshikha\\.gradle
+        cd C:\\eserver\\projects\\eciproject
+        gradlew ${cartridgename}:build ${cartridgename}:publish"""
+    }
+    
+    stage('Start Server'){
+        if (startServer == true) {
+            echo "Starting Server"
+            bat 'net start "Enfinity_AppServer1"'
+        } 
+    }
+}
