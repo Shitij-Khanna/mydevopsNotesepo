@@ -51,16 +51,16 @@ Grant access - programmatic access
 
 Go to permissions:
 add user to group - kops 
-user access key : AKIAUNCK2LV63A6GV2EF
-user secret access key : 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
+user access key : 
+user secret access key : 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 D. AWS configure is a command provided by AWs to install EC2 instances using command line. We will use this to setup ec2 instances using kops.
 
 Now, configure AWS to install instances from command line using AWS configure:
 Steps : 
  1-- > aws configure
-AWS Access Key ID [None]: AKIAUNCK2LV63A6GV2EF
-AWS Secret Access Key [None]: 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
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
 Default region name [None]: us-east-2   // region of the ec2 instance
 Default output format [None]:    // press enter without entering anything
 [ec2-user@ip-172-31-6-85 bin]$
@@ -87,7 +87,7 @@ export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
 E. Create an S3 bucket.   : mykopsbucket1
 
 Enter the 2 commands below : 
-export NAME=fleetman.k8s.local         // enter the name of cluster you want to give, probably has to end with .k8s.local
+export NAME=testkopscluster.k8s.local         // enter the name of cluster you want to give, probably has to end with .k8s.local
 export KOPS_STATE_STORE=s3://mykopsbucket1
 
 Check the AZs available :
@@ -140,7 +140,7 @@ Previewing changes that will be made:
 
 
 SSH public key must be specified when running with AWS (create with
- `kops create secret --name fleetman.k8s.local sshpublickey admin -i ~/.ssh/id_rsa.pub`)
+ `kops create secret --name testkopscluster.k8s.local sshpublickey admin -i ~/.ssh/id_rsa.pub`)
 
  When we get the above response : 
  Enter the below command :
@@ -169,9 +169,9 @@ If you see the EC2 instances in AWS console after doing this : (kops update clus
  
  Run :--> kops validate cluster again : 
  [ec2-user@ip-172-31-6-85 ~]$ kops validate cluster
-Using cluster from kubectl context: fleetman.k8s.local
+Using cluster from kubectl context: testkopscluster.k8s.local
 
-Validating cluster fleetman.k8s.local
+Validating cluster testkopscluster.k8s.local
 
 INSTANCE GROUPS
 NAME                    ROLE    MACHINETYPE     MIN     MAX     SUBNETS
@@ -184,7 +184,7 @@ ip-172-20-105-23.us-east-2.compute.internal     node    True
 ip-172-20-44-154.us-east-2.compute.internal     master  True
 ip-172-20-69-214.us-east-2.compute.internal     node    True
 
-Your cluster fleetman.k8s.local is ready
+Your cluster testkops.k8s.local is ready
 This means we have a running cluster, LIVE, though nothing is deployed to that cluster yet.
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 If we go to load balancers, see that there is  a load balancer also created by the name of the cluster:
