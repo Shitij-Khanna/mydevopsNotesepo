@@ -1,0 +1,347 @@
+Link very important :
+https://github.com/kubernetes/kops/blob/master/docs/getting_started/aws.md
+
+A.
+First on ec2 instance : 
+sudo yum update
+
+Then on instance : use the lower one for installation
+1. curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-darwin-amd64                 // install kops
+2. chmod +x ./kops      // change permissions
+3. sudo mv ./kops /usr/local/bin/        // move kops to user/local/bin
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+This works, use this :
+sudo curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+sudo chmod +x kops-linux-amd64
+sudo mv kops-linux-amd64 /usr/local/bin/kops
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+B. Then : 
+Install KubeCTL : 
+sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+Make kubectl executable :
+
+sudo chmod +x ./kubectl
+
+Move the binary in to your PATH.
+sudo mv ./kubectl /usr/local/bin/kubectl
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+C. 
+IAM, inside AWS console : 
+create group 'kops' with following roles:
+amazonec2fullaccess
+amazonroute53fullaccess
+amazons3fullaccess
+iamfullaccess
+amazonvpcfullaccess
+
+Group Name
+kops
+Edit Group Name
+Policies
+arn:aws:iam::aws:policy/AmazonEC2FullAccess arn:aws:iam::aws:policy/AmazonRoute53FullAccess arn:aws:iam::aws:policy/AmazonS3FullAccess arn:aws:iam::aws:policy/IAMFullAccess arn:aws:iam::aws:policy/AmazonVPCFullAccess
+Edit Policies
+
+Create user in the group:
+create user kops
+Grant access - programmatic access
+
+Go to permissions:
+add user to group - kops 
+user access key : AKIAUNCK2LV63A6GV2EF
+user secret access key : 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
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D. AWS configure is a command provided by AWs to install EC2 instances using command line. We will use this to setup ec2 instances using kops.
+
+Now, configure AWS to install instances from command line using AWS configure:
+Steps : 
+ 1-- > aws configure
+AWS Access Key ID [None]: AKIAUNCK2LV63A6GV2EF
+AWS Secret Access Key [None]: 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
+Default region name [None]: us-east-2   // region of the ec2 instance
+Default output format [None]:    // press enter without entering anything
+[ec2-user@ip-172-31-6-85 bin]$
+
+Check users by this command : 
+ 2--> aws iam list-users
+{
+    "Users": [
+        {
+            "UserName": "kops",
+            "Path": "/",
+            "CreateDate": "2019-11-03T15:39:36Z",
+            "UserId": "AIDAUNCK2LV6TCF6HHQ6V",
+            "Arn": "arn:aws:iam::302952111485:user/kops"
+        }
+    ]
+}
+
+ 3. -->  # Because "aws configure" doesn't export these vars for kops to use, we export them now. Enter the 2 commands below : 
+export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
+// This sets the access key and secret key from by getting it because we set them above
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+E. Create an S3 bucket.   : mykopsbucket1
+
+Enter the 2 commands below : 
+export NAME=fleetman.k8s.local         // enter the name of cluster you want to give, probably has to end with .k8s.local
+export KOPS_STATE_STORE=s3://mykopsbucket1
+
+Check the AZs available :
+aws ec2 describe-availability-zones --region us-east-2
+We get : 
+
+{
+    "AvailabilityZones": [
+        {
+            "OptInStatus": "opt-in-not-required",
+            "Messages": [],
+            "ZoneId": "use2-az1",
+            "GroupName": "us-east-2",
+            "State": "available",
+            "NetworkBorderGroup": "us-east-2",
+            "ZoneName": "us-east-2a",
+            "RegionName": "us-east-2"
+        },
+        {
+            "OptInStatus": "opt-in-not-required",
+            "Messages": [],
+            "ZoneId": "use2-az2",
+            "GroupName": "us-east-2",
+            "State": "available",
+            "NetworkBorderGroup": "us-east-2",
+            "ZoneName": "us-east-2b",
+            "RegionName": "us-east-2"
+        },
+        {
+            "OptInStatus": "opt-in-not-required",
+            "Messages": [],
+            "ZoneId": "use2-az3",
+            "GroupName": "us-east-2",
+            "State": "available",
+            "NetworkBorderGroup": "us-east-2",
+            "ZoneName": "us-east-2c",
+            "RegionName": "us-east-2"
+        }
+    ]
+}
+
+Now, Give kops the privelege to work with the cluster, have to do some public key and private key settings, standard
+With the kops create command below, we specify the structure for the cluster, and setup the configuration. We also specifiy the names of the AZs where we want to deploy the nodes/instances
+[ec2-user@ip-172-31-6-85 ~]$ kops create cluster --zones us-east-2a,us-east-2b,us-east-2c ${NAME}     //create in differnt AZs for higher availability
+I1116 15:31:32.423713   24776 create_cluster.go:519] Inferred --cloud=aws from z                                                                                                             one "us-east-2a"
+I1116 15:31:32.475365   24776 subnets.go:184] Assigned CIDR 172.20.32.0/19 to su                                                                                                             bnet us-east-2a
+I1116 15:31:32.475519   24776 subnets.go:184] Assigned CIDR 172.20.64.0/19 to su                                                                                                             bnet us-east-2b
+I1116 15:31:32.475578   24776 subnets.go:184] Assigned CIDR 172.20.96.0/19 to su                                                                                                             bnet us-east-2c
+Previewing changes that will be made:
+
+
+SSH public key must be specified when running with AWS (create with
+ `kops create secret --name fleetman.k8s.local sshpublickey admin -i ~/.ssh/id_rsa.pub`)
+
+ When we get the above response : 
+ Enter the below command :
+ --> ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa
+ It asks for a passphrase :
+ Hit enter without any passphrase. A file is generated, named id_rsa.
+ Then enter the below command : 
+ --> kops create secret --name ${NAME} sshpublickey admin -i ~/.ssh/id_rsa.pub
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Create cluster : 
+kops create cluster --zones us-east-2a,us-east-2b,us-east-2c ${NAME} // this will apply configuration for the cluster, not create instances
+kops edit cluster {NAME} // we can edit instance groups of kops, to change the configuration, like configure maximum no of instances and min no of instances in clusters etc
+kops edit ig nodes --name ${NAME}  // we can change the instance types here, minimum no of instances, max instances etc, type of instance - t2 micro etc
+kops get ig nodes --name ${NAME} // check the instances in the cluster
+--> kops update cluster ${NAME} --yes  // this will initialize the cluster and create instances
+
+'After this, run : 
+kops validate cluster // this will check if the cluster is up, takes a while , before that it gives errors bcoz instances take time to come up
+Check for :   kubectl get nodes --show-labels
+
+If you see the EC2 instances in AWS console after doing this : (kops update cluster ${NAME} --yes ),
+ -- you will see the instances coming up in there.
+ -- the number of instances specified there, like 2/3/4 would be created here in AWS.
+ -- One master, and type would also be the same as was configured in the file, type : c4-large, if not changed in the file
+ -- 2 nodes, if the config was not changed to add more nodes in the file, type t2.medium, if not changed in the file
+ 
+ Run :--> kops validate cluster again : 
+ [ec2-user@ip-172-31-6-85 ~]$ kops validate cluster
+Using cluster from kubectl context: fleetman.k8s.local
+
+Validating cluster fleetman.k8s.local
+
+INSTANCE GROUPS
+NAME                    ROLE    MACHINETYPE     MIN     MAX     SUBNETS
+master-us-east-2a       Master  c4.large        1       1       us-east-2a
+nodes                   Node    t2.medium       2       2       us-east-2a,us-east-2b,us-east-2c
+
+NODE STATUS
+NAME                                            ROLE    READY
+ip-172-20-105-23.us-east-2.compute.internal     node    True
+ip-172-20-44-154.us-east-2.compute.internal     master  True
+ip-172-20-69-214.us-east-2.compute.internal     node    True
+
+Your cluster fleetman.k8s.local is ready
+This means we have a running cluster, LIVE, though nothing is deployed to that cluster yet.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+If we go to load balancers, see that there is  a load balancer also created by the name of the cluster:
+api-fleetman-k8s-local-tkmafs
+kubectl get all, will call the load balancer
+load balancer is pointing to the master instance..If the master crashes, kubectl will be down for a time, but after sometime a new master will be created and added to the load balancer automatically.
+
+-- kubectl get nodes
+will give all nodes, with info...
+If any crashes, another one will be created
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+All that remains is to deploy a workload to the cluster:
+
+1....
+Take the file : storage-aws.yaml,  // containing the pvc claim for aws ebs not the host system
+use command : 
+--> sudo nano storage-aws.yaml // this creates a file storage-aws.yaml, copy the content of the storage yaml in this and press ctrl+x to save and exit
+Then apply this configuration:
+--> kubectl apply -f storage-aws.yaml
+
+Output :
+persistentvolumeclaim/mongo-pvc created
+storageclass.storage.k8s.io/cloud-ssd created
+
+Check persistent volume claim :
+-- kubectl get pvc
+It shows that the mongo pvc is bound and capacity as well
+mongo-pvc   Bound    pvc-9b0beec7-3327-400b-a09e-d344e21e96a8   20Gi       RWO            cloud-ssd      50s
+
+2....
+kubectl get pv
+gives the volume : 
+[ec2-user@ip-172-31-27-94 bin]$ kubectl get pvc
+NAME        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mongo-pvc   Bound    pvc-9b0beec7-3327-400b-a09e-d344e21e96a8   20Gi       RWO            cloud-ssd      50s
+[ec2-user@ip-172-31-27-94 bin]$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS   REASON   AGE
+pvc-9b0beec7-3327-400b-a09e-d344e21e96a8   20Gi       RWO            Delete           Bound    default/mongo-pvc   cloud-ssd               113s
+
+
+Reclaim policy DELETE means the volume will be deleted when the PVC is deleted. For prod env we can change this if we dont want the volume to be deleted with the PVC
+
+3...
+Apply mongo stack :
+--> sudo nano mongo-stack.yaml
+Paste the content of mongo-stack.yaml and do ctlr+x
+Then : 
+kubectl apply -f mongo-stack.yaml
+
+Output :
+deployment.apps/mongodb created
+service/fleetman-mongodb created
+
+Check the POD : 
+kubectl describe pod/mongodb-5dc79669d-xn768
+
+This will describe the pod, showing the container has been pulled and started, and that volume mount was successful. If some issue is there it will show up.
+
+[ec2-user@ip-172-31-27-94 bin]$ kubectl get all
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/mongodb-5dc79669d-xn768   1/1     Running   0          3m57s
+
+NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)     AGE
+service/fleetman-mongodb   ClusterIP   100.65.55.158   <none>        27017/TCP   3m57s
+service/kubernetes         ClusterIP   100.64.0.1      <none>        443/TCP     76m
+
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mongodb   1/1     1            1           3m57s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/mongodb-5dc79669d   1         1         1       3m57s
+
+
+Check the logs : kubectl logs -f pod/mongodb-5dc79669d-xn768
+
+Gives std mongo logging, waiting for connections on 27017
+
+4....
+Apply other workloads:
+--> sudo nano workload-stack.yaml
+Paste the contents of workloads.yaml file, and exit.
+
+5. 
+--> sudo nano services.yaml
+Paste the content of services-aws.yaml
+..Services file for aws is having small changes in config. Instead of nodeport in the service for webapp, it has loadbalancer, and the port 30080 is not reqd.
+..This config provisions a load balancer automaticlly, which balances load between the pods
+.. In fleetman-queue service, we change it to Cluster IP as it is not reqd to be accessed on Prod, and remove the port 30010
+.. API gateway also, remove nodeport, port no for nodeport, and change to clusterIP.
+ Now paste the file
+Now, run :
+--> kubectl apply -f .
+
+Output:
+deployment.apps/mongodb unchanged
+service/fleetman-mongodb unchanged
+service/fleetman-webapp created
+service/fleetman-queue created
+service/fleetman-position-tracker created
+service/fleetman-api-gateway created
+persistentvolumeclaim/mongo-pvc unchanged
+storageclass.storage.k8s.io/cloud-ssd unchanged
+deployment.apps/queue created
+deployment.apps/position-simulator created
+deployment.apps/position-tracker created
+deployment.apps/api-gateway created
+deployment.apps/webapp created
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+DO Kubectl get all and see :
+
+pod/api-gateway-77dff9778b-j5mnh         0/1     ContainerCreating   0          28s
+pod/mongodb-5dc79669d-xn768              1/1     Running             0          16m
+pod/position-simulator-96f46d659-w84bx   0/1     ContainerCreating   0          28s
+pod/position-tracker-f6f5dd79d-x579s     1/1     Running             0          28s
+pod/queue-8b577ccc6-zbwcs                1/1     Running             0          28s
+pod/webapp-7bf85bf85f-7gq95              0/1     ContainerCreating   0          28s
+
+NAME                                TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)              AGE
+service/fleetman-api-gateway        ClusterIP      100.68.22.125    <none>                                                                    8080/TCP             28s
+service/fleetman-mongodb            ClusterIP      100.65.55.158    <none>                                                                    27017/TCP            16m
+service/fleetman-position-tracker   ClusterIP      100.71.81.128    <none>                                                                    8080/TCP             28s
+service/fleetman-queue              ClusterIP      100.70.127.166   <none>                                                                    8161/TCP,61616/TCP   28s
+service/fleetman-webapp             LoadBalancer   100.66.117.114   ae97f03e0ea444c82be629e425230611-1197293147.us-east-2.elb.amazonaws.com   80:32398/TCP         28s
+service/kubernetes                  ClusterIP      100.64.0.1       <none>                                                                    443/TCP              88m
+
+NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/api-gateway          0/1     1            0           28s
+deployment.apps/mongodb              1/1     1            1           16m
+deployment.apps/position-simulator   0/1     1            0           28s
+deployment.apps/position-tracker     1/1     1            1           28s
+deployment.apps/queue                1/1     1            1           28s
+deployment.apps/webapp               0/1     1            0           28s
+
+NAME                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/api-gateway-77dff9778b         1         1         0       28s
+replicaset.apps/mongodb-5dc79669d              1         1         1       16m
+replicaset.apps/position-simulator-96f46d659   1         1         0       28s
+replicaset.apps/position-tracker-f6f5dd79d     1         1         1       28s
+replicaset.apps/queue-8b577ccc6                1         1         1       28s
+replicaset.apps/webapp-7bf85bf85f              1         1         0       28s
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+check logs:
+
+kubectl get logs -f pod/position-simulator-96f46d659-w84bx
+
+--- You can check the dns name of the load balancer and access it to access the webapp :
+ae97f03e0ea444c82be629e425230611-1197293147.us-east-2.elb.amazonaws.com 
+
+Instances in ELB should show In Service
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+To delete cluster : 
+kops delete cluster --name ${NAME} --yes // ${NAME} being used is an environment variable set earlier, with the name of the cluster
+Deleted cluster can be restarted again later 
+
