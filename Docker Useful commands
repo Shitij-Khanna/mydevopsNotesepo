@@ -21,13 +21,13 @@ docker container ls
 
 
 Run a container : 
---- docker container run -p  9090:8080 webapp
-Here, the name of image is 'webapp'. 9090 is the port exposed to the outside world, whereas 8080 is the port inside the container on which the app is running.
-Run after this : http://localhost:9090/ and see webapp running
+--- docker container run -p  9090:8080 virtualpairprogrammers/fleetman-webapp
+Here, the name of image is 'virtualpairprogrammers/fleetman-webapp'. 9090 is the port exposed to the outside world, whereas 8080 is the port inside the container on which the app is running.
+Run after this : http://localhost:9090/ and see fleetman-webapp running
 In this syntax, 9090 is the port which we enter on the browser and it gets forwarded to port 8080 in the container
 
 -- Run a container in a DETACHED way, i.e. do not attach the output just below in the console when u run a container
---docker container run -d -p 9080:8080 webapp
+--docker container run -d -p 9080:8080 virtualpairprogrammers/fleetman-webapp
 
 Pull an image from docker hub:
 docker pull <imagename>
@@ -44,7 +44,7 @@ docker image ls
 -->When a server is run in docker container, it is required to specify a port
 Ubuntu is not a server, so running ubuntu will not require a port
 
-docker run ubuntu // the container stops soon after starting...container keeps running till the time the command specified in the container is running.
+docker un ubuntu // the container stops soon after starting...container keeps running till the time the command specified in the container is running.
 to run ubuntu ---
 docker container run -it ubuntu
 exit ubuntu : exit
@@ -105,7 +105,7 @@ To disconnect a running container from a user-defined bridge, use the docker net
 docker container exec -t myspringcontainer1 sh
 
 now,
-ping MyMySqlContainer //// we get a response...so we have connected to the mysql container internally from docker.this my sql container is not accessible to the outer world apart from this network where both containers are running
+ping MyMySqlContainer //// we get a response...so we have connected to the mysql container internally from docker.this my sql container is not accessible to the outer world aprt from this network where both containers are running
 
 Remove container :
 docker container rm <nameofcontainer>
@@ -295,6 +295,9 @@ https://www.codementor.io/samueljames/using-docker-with-elasticsearch-logstash-a
 http://www.thedreaming.org/2014/11/21/docker-logstash/ -- check this also
 
 
+Jettro : 
+mvn compile jib:dockerBuild
+
 
 Share environment variables :
 Linked containers on the default bridge network share environment variables.
@@ -338,3 +341,34 @@ New-VMSwitch -Name “myCluster” -AllowManagement $True -NetAdapterName “Eth
 minikube start --vm-driver="hyperv" --hyperv-virtual-switch="myCluster"
 minikube start — vm-driver=hyperv — hyperv-virtual-switch=myCluster
 https://medium.com/containers-101/local-kubernetes-for-windows-minikube-vs-docker-desktop-25a1c6d3b766
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Microservices : 
+first go the the project directory where pom.xml is placed..
+do:
+mvn clean 
+mvn package
+
+Build docker image for zuul : 
+docker build --tag=zuul-api-gateway --force-rm=true .
+A. Tag this image to publish to hub : 
+docker tag 2a4cdf1442a4 shitijkhanna/sks-zuul-api-gateway
+Push : 
+docker push shitijkhanna/sks-zuul-api-gateway
+
+B. build image for albums microservice :
+docker build --tag=albums-ws --force-rm=true .
+docker tag 9f3c41717440 shitijkhanna/sks-albums-ws
+docker push shitijkhanna/sks-albums-ws
+
+C Users microservice :
+
+docker build --tag=users-ws --force-rm=true .
+docker tag 26ab34eb44eb shitijkhanna/sks-users-ws
+docker push shitijkhanna/sks-users-ws
+
+D. Eureka
+docker build --tag=eureka --force-rm=true .
+docker tag 9f3c41717440 shitijkhanna/sks-albums-ws
+docker push shitijkhanna/sks-albums-ws
