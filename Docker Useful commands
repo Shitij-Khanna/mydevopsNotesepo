@@ -329,7 +329,7 @@ See ->
 eurekaserver                                    latest              9767a833a24b        3 months ago        145MB
 shitijkhanna/eurekaserver                       latest              9767a833a24b        3 months ago        145MB
 push : 
-docker login 
+docker login (shitijkhanna, Shitij1!)
 docker image push reponame:tagname
 
 ELK server ticket:
