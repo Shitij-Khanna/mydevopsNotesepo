@@ -1,0 +1,45 @@
+select 
+(select count(*) from paymentinstrumentinfo where lineitemctnrid = orders.uuid and paymentserviceid = 'ISH_GIFT_CARD') Giftcardpayments,
+(select sum(calculatedpaymentamountvalue) from paymentinstrumentinfo where lineitemctnrid = orders.uuid and paymentserviceid = 'ISH_GIFT_CARD') Giftcardamount,
+(select count(*) from giftcardtransaction where amountvalue < 0 and orderdocumentno = orders.documentno) giftcardtransactions,
+(select paymentserviceid from paymentinstrumentinfo where lineitemctnrid = orders.uuid and paymentserviceid != 'ISH_GIFT_CARD') as additionalpaymentmethod,
+(select domainname from domaininformation where domainid = orders.domainid) domainname,
+--(select sum(gct.amountvalue) from giftcardtransaction gct, giftcard_av gcav where gct.giftcarduuid = gcav.ownerid and gcav.name = 'validTo' and gcav.datevalue > orders.creationdate and gct.giftcarduuid in (select giftcarduuid from giftcardtransaction where userid = orders.userid and sequencenumber = 1)) userGiftcardbalance,
+orders.buyerno,
+orders.documentno,
+orders.creationdate
+from 
+(select
+iso.* from isorder iso where 
+exists(select 1 from paymentinstrumentinfo where lineitemctnrid = iso.uuid and paymentserviceid = 'ISH_GIFT_CARD')
+and not exists(select 1 from giftcardtransaction where amountvalue < 0 and orderdocumentno = iso.documentno) 
+and iso.creationdate > to_date('01-02-2020','dd-mm-yyyy') and iso.status not in (2, 6, 15, 16)) orders
+order by orders.creationdate desc
+;
+
+
+
+with orderlist as 
+(select
+iso.documentno, iso.uuid, iso.userid from isorder iso where 
+exists(select 1 from paymentinstrumentinfo where lineitemctnrid = iso.uuid and paymentserviceid = 'ISH_GIFT_CARD')
+and not exists(select 1 from giftcardtransaction where amountvalue < 0 and orderdocumentno = iso.documentno) 
+and iso.creationdate > to_date('01-02-2020','dd-mm-yyyy') and iso.status not in (2, 6, 15, 16))
+select documentno, pii.paymentserviceid, pii.calculatedpaymentamountvalue as amount , pt.uuid as paymenttransactionid from orderlist io
+inner join paymentinstrumentinfo pii on pii.lineitemctnrid = io.uuid
+inner join paymenttransaction pt on pt.orderid = io.uuid and pt.paymentinstrumentinfoid = pii.uuid
+;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Limit : 
+ select
+        course0_.id as id1_0_,
+        course0_.created_date as created_2_0_,
+        course0_.last_updated_date as last_upd3_0_,
+        course0_.name as name4_0_ 
+    from
+        course course0_ 
+    order by
+        course0_.id asc limit ? offset ?
+		
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
