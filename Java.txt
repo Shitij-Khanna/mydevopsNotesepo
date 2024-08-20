@@ -1,0 +1,238 @@
+---------------------
+OPP Solid Principles
+---------------------
+https://javarevisited.blogspot.com/2018/07/10-object-oriented-design-principles.html
+https://howtodoinjava.com/best-practices/5-class-design-principles-solid-in-java/
+https://javarevisited.blogspot.com/2015/06/difference-between-inheritance-and-Composition-in-Java-OOP.html
+
+=====================
+Concurrent
+---------------------
+50 IQ-https://javarevisited.blogspot.com/2014/07/top-50-java-multithreading-interview-questions-answers.html
+https://javarevisited.blogspot.com/2018/07/java-multi-threading-interview-questions-answers-from-investment-banks.html
+https://javarevisited.blogspot.com/2013/02/concurrenthashmap-in-java-example-tutorial-working.html
+https://javarevisited.blogspot.com/2017/08/top-10-java-concurrenthashmap-interview.html
+https://javarevisited.blogspot.com/2013/02/concurrent-collections-from-jdk-56-java-example-tutorial.html
+https://howtodoinjava.com/java/multi-threading/throttling-task-submission-rate-using-threadpoolexecutor-and-semaphore/
+Thread Local -https://javarevisited.blogspot.com/2012/05/how-to-use-threadlocal-in-java-benefits.html
+Locks - https://javarevisited.blogspot.com/2014/10/how-to-use-locks-in-multi-threaded-java-program-example.html
+
+Best practices :
+https://javarevisited.blogspot.com/2012/08/top-10-jdbc-best-practices-for-java.html#axzz7FfXUi0Gz
+- 
+
+Questions : 
+https://www.java67.com/2013/07/15-advanced-core-java-interview-questions-answers-senior-experienced-5-6-years-programmers-developers.html
+https://www.fullstack.cafe/blog/senior-java-developer-interview-questions
+https://javarevisited.blogspot.com/2015/10/133-java-interview-questions-answers-from-last-5-years.html#axzz7FfXUi0Gz
+
+reentrany loack - https://javarevisited.blogspot.com/2015/06/java-lock-and-condition-example-producer-consumer.html
+Executor service- https://www.baeldung.com/java-executor-service-tutorial
+Videos on Concurrency = https://www.youtube.com/watch?v=7VqWkc9o7RM&list=PLhfHPmPYPPRk6yMrcbfafFGSbE2EPK_A6&index=14
+=====================
+Core Java
+---------------------
+https://javarevisited.blogspot.com/2015/10/133-java-interview-questions-answers-from-last-5-years.html
+
+
+
+==============================
+GC Interview Questions
+------------------------------
+https://javarevisited.blogspot.com/2011/04/garbage-collection-in-java.html -- working --old
+https://javarevisited.blogspot.com/2012/10/10-garbage-collection-interview-question-answer.html#axzz4pbqSY8Ua-- Remaining
+https://javarevisited.blogspot.com/2011/11/hotspot-jvm-options-java-examples.html
+
+GC links nice info : Analyse GC logs, change GC of your app: 
+https://www.overops.com/blog/improve-your-application-performance-with-garbage-collection-optimization/
+https://sematext.com/blog/java-garbage-collection-tuning/#toc-parallel-garbage-collector-7
+https://www.baeldung.com/jvm-garbage-collectors
+https://sematext.com/blog/java-garbage-collection-logs/
+https://sematext.com/blog/java-gc-log-analysis-tools/
+https://stackoverflow.com/questions/54615916/when-to-choose-serialgc-parallelgc-over-cms-g1-in-java
+
+Performance : 
+https://www.techgeeknext.com/java/java-performance-interview-questions
+https://www.youtube.com/watch?v=hjua_FujPoQ
+
+https://developers.redhat.com/articles/2021/11/02/how-choose-best-java-garbage-collector#garbage_first__g1__collector
+
+Analyse GC Tool :
+https://gceasy.io/
+
+Memory leak analysis heap dump : 
+https://www.youtube.com/watch?v=SuguH8YBl5g
+https://blog.heaphero.io/2017/10/13/how-to-capture-java-heap-dumps-7-options/
+
+
+===========
+Collection
+-----------
+
+https://javarevisited.blogspot.com/2011/11/collection-interview-questions-answers.html
+https://javarevisited.blogspot.com/2011/11/collection-interview-questions-answers.html#axzz4pbqSY8Ua
+
+interview questions : 
+https://javaconceptoftheday.com/java-collections-interview-questions-with-answers/
+============
+Tricky
+------------
+https://www.java67.com/2012/09/top-10-tricky-java-interview-questions-answers.html -- Remaining
+
+
+==============================
+Coding Interview Questions
+------------------------------
+https://javarevisited.blogspot.com/2017/07/top-50-java-programs-from-coding-Interviews.html-- Remaining
+https://javarevisited.blogspot.com/2011/06/top-programming-interview-questions.html
+
+
+==============================
+Other Java Feature
+------------------------------
+https://www.java67.com/2016/03/top-21-java-inheritance-interview-Questions-Answer-Programming.html
+https://javarevisited.blogspot.com/2016/09/21-java-final-modifier-keyword-interview-questions-answers.html#axzz4pYJxoTvh
+https://www.java67.com/2016/01/main-method-interview-questions-in-java-answers.html
+https://www.java67.com/2015/08/top-10-method-overloading-overriding-interview-questions-answers-java.html
+https://www.java67.com/2013/07/15-java-enum-interview-questions-amswers-for-experienced-programmers.html
+
+https://www.java67.com/2017/08/top-17-sql-and-unix-interview-questions.html
+
+Design patterns microservices : 
+https://dzone.com/articles/design-patterns-for-microservices
+
+My questions : 
+
+1. When do we distinguish how to choose between Strong reference and Soft reference ? 
+2. How is weak reference useful ?
+3. Difference between iterator and enumeration, arraylits / vector, arraylist / copyonwritearraylist, arraylist/ linkedlist..
+
+https://stackoverflow.com/questions/1673841/examples-of-gof-design-patterns-in-javas-core-libraries/
+https://www.verisign.com/en_US/website-presence/online/how-dns-works/index.xhtml
+
+Liquibase : 
+https://medium.com/@knoldus/control-liquibase-migration-scripts-on-different-environments-e1f3d9080ca3
+
+Data structures : 
+https://www.youtube.com/watch?v=81PpYQ0AN_w&list=PLt4nG7RVVk1jqwwQUTByTcTcHxIlMllfy
+https://thecodingsimplified.com/delete-a-node-of-binary-search-tree/
+Also, my code school videos
+
+Hibernate :
+https://www.java67.com/2016/02/top-20-hibernate-interview-questions.html
+https://www.journaldev.com/3633/hibernate-interview-questions-and-answers
+
+
+
+https://thorben-janssen.com/5-common-hibernate-mistakes-that-cause-dozens-of-unexpected-queries/#Use_a_Bulk_Update_or_Remove_Operation
+As an interviewer, I often ask some questions regarding Spring internal implementation. for example, do you know the internal structure of bean definition? describe different types of application context; how Spring bind list to bean property? how to define a customized editor with Spring MVC? Can Spring MVC bind http request paramaters to multiple objects?
+
+--Linux 
+--apache web server and load balancers
+--App architecture understand - DNS resolver / Load balancers / Web servers / App servers / DB.
+-- Oracle context indices and uses https://www.dbconcepts.com/oracle-text-index/
+--SOLR search, Elasticsearch
+--Devops : https://www.edureka.co/blog/interview-questions/top-devops-interview-questions-2016/ / TCP dump
+-PWA
+Terraform
+Serverless
+Java spring 5 reactive, JaxRS, JaxWS
+GRPC
+Kubernetes again
+What is robots.txt ? 
+Sitemap ?
+CI CD / artifact repositories / 
+
+Hacking techniques basics - cross site scripting / DDOS attacks / security basics  / clickjacking etc
+
+
+Networking : 
+Tutorial : https://www.youtube.com/watch?v=oieIGwUPaKE&list=PLR0bgGon_WTKY2irHaG_lNRZTrA7gAaCj&index=2x
+TCP : https://www.youtube.com/watch?v=1lDfCRM6dWk
+Netork interfaces : https://www.youtube.com/watch?v=PYTG7bvpvRI
+basics of network and security / multicasting and network interfaces / TCP dump / how to use TCP dumps to monitor network traffic over network interface. / wireshark, OSI Models
+tns and udp protocols
+http protocols
+IGMP snooping 
+what is vmotion
+
+Oracle : 
+Tablespace and DB depths
+https://docs.oracle.com/cd/B19306_01/server.102/b14220/physical.htm#:~:text=An%20Oracle%20database%20consists%20of,in%20which%20Oracle%20is%20running.
+https://www.youtube.com/watch?v=F80USb01xDE
+
+Solr : 
+https://www.baeldung.com/full-text-search-with-solr
+
+
+Data  structures:
+https://towardsdatascience.com/logarithms-exponents-in-complexity-analysis-b8071979e847
+https://www.geeksforgeeks.org/applications-of-heap-data-structure/
+https://stackoverflow.com/questions/2307283/what-does-olog-n-mean-exactly
+
+Job : 
+https://www.java-professionals.nl/?gclid=CjwKCAiAjoeRBhAJEiwAYY3nDGjKPv9fr8agKYBAuAwwIlw6VWX0PnRPNyLvHzgwUMCuK1TMXMZHJhoCescQAvD_BwE
+
+dutch : 
+https://adappel.nl/lesmateriaal
+
+Vault : 
+https://www.baeldung.com/vault
+
+Encryption and hashing : 
+https://www.thesslstore.com/blog/difference-encryption-hashing-salting/
+
+architecture : 
+https://medium.com/@alessandro.traversi/understanding-the-solution-architecture-document-sad-with-a-lean-template-050287994a88
+
+Jsonb queries : 
+https://www.sqliz.com/postgresql-ref/jsonb_to_recordset/
+
+Event sourcing : https://medium.com/cloud-native-daily/microservices-patterns-event-sourcing-7c6e765681c1#:~:text=In%20Event%20Sourcing%2C%20event%20aggregates,events%20by%20their%20primary%20key.
+
+
+Domain driven design : 
+https://ddd.acloudfan.com/3.ddd-intro/
+https://www.alibabacloud.com/blog/an-in-depth-understanding-of-aggregation-in-domain-driven-design_598034
+https://medium.com/@philsarin/whats-the-point-of-the-aggregate-pattern-741a3132da5c
+
+Event sourcing and CQRS : 
+https://blog.nebrass.fr/playing-with-cqrs-and-event-sourcing-in-spring-boot-and-axon/
+https://medium.com/@AlexanderObregon/implementing-cqrs-command-query-responsibility-segregation-with-spring-microservices-da0b45b1929e
+https://mbahardogan.medium.com/cqrs-pattern-with-spring-boot-and-axon-framework-9500e60b7d5f
+
+Design : 
+https://iq.opengenus.org/system-design-of-crm-software/
+
+https://www.baeldung.com/spring-profiles
+
+Python : 
+https://www.youtube.com/watch?v=ZyhVh-qRZPA&list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS
+https://www.youtube.com/playlist?list=PLfFghEzKVmjsNtIRwErklMAN8nJmebB0I with ML
+
+AI : 
+https://dswharshit.medium.com/roadmap-to-become-an-ai-engineer-roadmap-6d9558d970cf
+
+Azure : 
+https://www.youtube.com/watch?v=GhtwL0yGXo4&list=PL0AYtrUw-NRSPOgJ2h62aNrhs-IrVv3vl
+https://www.youtube.com/watch?v=XouJO-AgYNY&list=PLhLKc18P9YODdrbyuA52Zn9-kwboIOz2W&index=2
+https://www.youtube.com/watch?v=rVYPaCmz2cc&list=PLhLKc18P9YODdrbyuA52Zn9-kwboIOz2W&index=6
+
+System design : 
+https://bytebytego.com/intro/system-design-interview
+
+Gen AI:
+https://www.youtube.com/@krishnaik06/playlists
+
+OAuth: 
+https://www.youtube.com/watch?v=ZV5yTm4pT8g
+
+Maven : 
+https://www.baeldung.com/maven-verify-vs-test#:~:text=The%20Maven%20build%20lifecycle%20is,testing%2C%20and%20deploying%20Java%20applications.
+
+Helm : 
+https://www.youtube.com/watch?v=jUYNS90nq8U
+
+webflux with eureka : 
+https://medium.com/nerd-for-tech/service-discovery-in-microservices-spring-boot-web-flux-3029f1cf6e68
+https://spring.io/guides/gs/spring-cloud-loadbalancer

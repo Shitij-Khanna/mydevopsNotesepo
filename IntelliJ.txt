@@ -1,0 +1,58 @@
+alt + enter : fix Warnings suggestions, 
+double shift to search file
+Recent files : control E
+Ctrl + shift + n : go to file
+F2 : next error, warning or suggestions
+Alt + 1 : wider view , smaller view
+
+Ctrl+1 => import class shortcut
+Ctrl + Alt+ O+ B => show implemented methods
+Press Ctrl Alt 0T -- surround with try catch
+
+Press Ctrl+Shift+E to get a list of recently viewed or changed code fragments.
+Ctrl + B : Go to field declaration by clicking on it
+Ctrl + Alt + B : Find references
+Shift + Ctlr + Enter : Complete the current statement's syntax
+Refactor : Ctrl + Shift + alt + T
+ 
+Ctrl + B - like Ctrl K of eclipse
+Ctrl + F12 = Ctrl + O of eclipse
+
+
+The Extract Variable refactoring wraps the selected expression into a variable. It adds a new variable declaration and uses the expression as an initializer. To invoke this refactoring, select the expression and press Ctrl+Alt+V (Refactor | Extract | Variable):
+
+
+You can jump to a file located in a deeply nested directory by pressing Ctrl+Shift+N and typing several characters of the enclosing directories and filename.
+(s/m/j) for src / main / java
+
+To evaluate any expression while debugging your program, select the expression in the editor and press Alt+F8.
+
+When using Code Completion, you can select the first item by pressing Ctrl+..
+IntelliJ IDEA Community will insert the selected item followed by a dot or -> depending on the current context.
+
+To expand selection, press Ctrl+W. Each time you press Ctrl+W, the selection expands to other areas of code.
+For example, the selection expands from a method name to the expression calling this method, then to the whole statement, then to the containing block, and so on.
+
+When using Code Completion, you can accept the currently highlighted selection in the popup list by pressing Tab.
+Unlike accepting with Enter, the selected name will overwrite the rest of the name to the right of the caret. This can be especially useful for replacing one method or variable name with another.
+
+To quickly wrap a code block in a construct, select it in the editor and press Ctrl+Alt+T (Code | Surround With).
+The list of available options ("wrappers") is context-sensitive and depends on the language. For example, you can surround html blocks with tags, and so on
+
+To close all editor tabs, right-click a tab and select Close All.
+To close all tabs except the active one, press Alt and click the Close button on the active tab.
+
+Scratch files are temporary files that let you experiment and prototype in the editor, without creating any project files.
+To create a scratch file, press Ctrl+Alt+Shift+Insert, and then select the language to use.
+
+You can narrow down the list of code completion suggestions by using camel case prefixes.
+
+You can use Ctrl+Q (View | Quick Documentation), Ctrl+P (View | Parameter Info), Ctrl+B (Navigate | Declaration), and similar shortcuts not only in the editor but also in the suggestions list while using code completion.
+ 
+To select multiple fragments in the column mode Alt+Shift+Insert, press and hold Ctrl+Shift+Alt, and drag the mouse:
+
+Press Ctrl+E (View | Recent Files) to view the list of recently opened files.
+
+http://localhost:8090/swagger-ui.html#/bulk-upload-rest-controller/updateBulkClubPriceActiveUsingPUT 
+
+

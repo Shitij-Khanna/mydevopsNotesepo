@@ -1,0 +1,328 @@
+Get all indices : 
+GET /_cat/indices
+
+------------------------------------------------------------------------------------------------
+index one document
+POST /shipment/_doc
+        {
+            "sku": "9789400406910",
+            "title": "ramesh khanna",
+            "orderNumber": "0126585629",
+            "creationDate": "2022-09-25",
+            "article_number_relation":"V9789056479030",
+            "releaseDate": null,
+            "originalPromiseDeliveryDate": null,
+            "shipmentDate": "testdate",
+            "deliveryDate": "testdate",
+            "articleRightOfReturn": true,
+            "orderLineReference": "testline ref shitij singh",
+            "orderSource": "intershop",
+            "author": "Ramesh",
+            "image": null,
+            "productType": null,
+            "shipmentQty": 0,
+            "pakbonNumber": "1398459038",
+            "colliNumber": null,
+            "fulfilmentStatusDisplay": null
+        }
+		
+		
+		sku : 9789400406270
+        "orderNumber": "0126585613",
+
+------------------------------------------------------------------------------------------------		
+get all documents from an index
+
+GET shipment/_search
+{
+  "query":{
+    "match_all": {}
+  }
+}
+
+------------------------------------------------------------------------------------------------
+get document by id
+
+GET shipment/1/2
+GET shipment/1/2/_source
+------------------------------------------------------------------------------------------------
+
+Get documents by field name and value : 
+
+GET shipment/_search
+{
+  "query":{
+    "match": {
+      "title": "khanna"
+    }
+  }
+}
+
+GET shipment/_search
+{
+  "query":{
+    "match": {
+      "shipmentType": "on_route"
+    }
+  },
+  "aggs": {
+    "shipmentStatus": {
+      "terms": {
+        "field": "shipmentType.keyword"
+      }
+    }
+    
+  }
+}
+
+Query with multiple filters : 
+GET shipment/_search
+{
+  
+    "query": {
+        "range" : {
+            "orderDate": {
+                "gte" : "2022-06-27",
+                "lte" : "2022-07-29"
+            }
+        }
+    },
+
+  
+  "aggs": {
+    "shipmentDate": {
+      "terms": {
+        "field": "shipmentDate"
+      }
+    },
+    "shipmentStatus": {
+      "terms": {
+        "field": "shipmentType.keyword"
+      }
+    },
+    "orderDate": {
+      "terms": {
+        "field": "creationDate"
+      }
+    },
+    "deliverDate": {
+      "cardinality": {
+        "field": "deliveryDate"
+      }
+    },
+    "deliveredShipments": {
+      "terms": {
+        "field": "fulfilmentStatus.quantityDelivered"
+      }
+    }
+    
+  }
+}
+
+{
+  "query":{
+    "match": {
+      "title": "kha sachdeva"
+    }
+  }
+}
+
+Get documents by field name and value : multiple fields in where condition 
+
+GET shipment/_search
+GET shipment/_search
+{
+  "query": {
+     "bool": {
+       "must": [ 
+          {"match": {"orderNumber": "0126585606"}},
+          {"match": {"sku": "9789400406254"}}  
+               ] 
+            }
+         }
+}
+
+GET shipment/_search
+{
+  "query": {
+     "bool": {
+       "must": [ 
+          {"match": {"sku": "9789400406254"}}  
+               ] 
+            }
+         }
+}
+
+------------------------------------------------------------------------------------------------
+
+Aggregations / Filters : 
+GET shipment/_search
+{
+  "aggs": {
+    "popular_skus": {
+      "terms": {
+        "field": "sku.keyword"
+      }
+    }
+  }
+}
+
+GET shipment/_search
+{
+  "aggs": {
+    "popular_skus": {
+      "terms": {
+        "field": "shipmentDate"
+      }
+    }
+  }
+}
+ // gets aggregations by sku : all different skus and their count
+ 
+analyzer in elasticsearch
+https://medium.com/@milosbiljanovic/springboot-autocomplete-with-elasticsearch-11ea95d58854 
+----------------------------------------------------------------------------------------------
+
+DELETE /shipment
+
+------------------------------------------------------------------------------------------------
+Delete all documents
+
+POST shipment/_delete_by_query?conflicts=proceed
+{
+"query": {
+"match_all": {}
+}
+}
+
+------------------------------------------------------------------------------------------------
+
+Date query with range : 
+GET shipment/_search
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "range": {
+                "shipmentDate": {
+                  "gt": "2020-06-27T15:37:08.595919Z",
+                  "lte": "2023-04-21T15:52:08.595919Z"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }  
+}
+
+GET shipment/_search
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "range": {
+                "shipmentDate": {
+                  "gt": "2020-06-27",
+                  "lte": "2023-04-21"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }  
+}
+
+SHARDS : 
+GET /_cat/shards
+-- gets the shards with details
+
+
+GET /_cat/shards/shipment
+-- gets the shards with details for the index specified
+
+
+
+https://mahajanjatin-14.medium.com/deep-dive-into-elastic-search-querying-filter-vs-query-context-920fdbfd31de
+https://logz.io/blog/elasticsearch-queries/
+https://towardsdatascience.com/deep-dive-into-querying-elasticsearch-filter-vs-query-full-text-search-b861b06bd4c0
+
+https://medium.com/geekculture/elastic-search-queries-hands-on-examples-fe5b2bc10c0e
+
+
+explain query : 
+GET orderline/_explain/9b2ffd34-782a-444f-902f-8a43a936b194
+{
+  "query" : {
+    "match" : { "title" : "KUBICK E; CHEESE" }
+  }
+}
+
+---------------------------------------------------------------------------------
+
+	GET shipment/_search
+	{
+	  "query": {
+		"bool": {
+		  "filter": [
+			{
+			  "term": {
+				"betapressId": "B027945"
+			  }
+			},
+			{
+			  "range": {
+				"shipmentDate": {
+				  "gte": "now-219d/d"
+				}
+			  }
+			}
+		  ]
+		}
+	  }, 
+	  "sort": [
+		{
+		  "shipmentDate": {
+			"order": "desc"
+		  }
+		}
+	  ], 
+	  "aggs": {
+		"pakbonDetails": {
+		  "terms": {
+			"field": "pakbonNumber"
+		  },
+		  "aggs": {
+			"pakbonCollis": {
+			  "terms": {
+				"field": "colliNumber"
+			  }, "aggs": {
+				"colliProducts": {
+				  "terms": {
+					"field": "sku"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	}
+	
+	
+	
+---------------------------------------------------------------------------	-------------------------
+	GET /orderline-2/_analyze
+{
+  "analyzer":"autocomplete_index",
+  "text": "SAP_12345"
+}

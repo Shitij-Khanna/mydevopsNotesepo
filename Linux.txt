@@ -1,0 +1,360 @@
+https://www.howtogeek.com/412055/37-important-linux-commands-you-should-know/
+https://ryanstutorials.net/linuxtutorial/
+regex : https://ryanstutorials.net/regular-expressions-tutorial/
+script : https://ryanstutorials.net/bash-scripting-tutorial/
+
+VI Editor : https://www.thomas-krenn.com/en/wiki/Vi_editor_tips_and_tricks  https://opensource.com/article/18/1/top-11-vi-tips-and-tricks
+
+Guru : https://www.guru99.com/communication-in-linux.html
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+->> Filters:
+head [-number of lines to print] [path]
+head -10 <filename>    // read top 10 lines of file
+
+df : disk space
+
+tail [-number of lines to print] [path]
+tail -10 <filename>   // read last 10 lines of file
+tail -f /var/log/messages  //fetch the messages continously dynamically
+
+sort [-options] [path]
+Sort will sort it's input, nice and simple. By default it will sort alphabetically but there are many options available to modify the sorting mechanism. Be sure to check out the man page to see everything it may do.
+sort releaseNotes.txt
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+nl:
+nl stands for number lines and it does just that.
+nl [-options] [path]
+nl linux.txt
+nl -s '. ' -w 10 mysampledata.txt
+In the above example we have used 2 command line options. The first one -s specifies what should be printed after the number while the second one -w specifies how much padding to put before the numbers. For the first one we needed to include a space as part of what was printed. Because spaces are normally used as separator characters on the command line we needed a way of specifying that the space was part of our argument and not just inbetween arguments. We did that by including the argument surrounded by quotes.
+
+wc : wordcount
+wc [-options] [path]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- cut:
+cut is a nice little program to use if your content is separated into fields (columns) and you only want certain fields.
+In our sample file we have our data in 3 columns, the first is a name, the second is a fruit and the third an amount. Let's say we only wanted the first column.
+-- cut -f 1 -d ' ' linux.txt
+cut defaults to using the TAB character as a separator to identify fields. In our file we have used a single space instead so we need to tell cut to use that instead. The separator character may be anything you like, for instance in a CSV file the separator is typically a comma ( , ). This is what the -d option does (we include the space within single quotes so it knows this is part of the argument). The -f option allows us to specify which field or fields we would like. If we wanted 2 or more fields then we separate them with a comma as below.
+-- cut -f 1,2 -d ' ' mysampledata.txt
+cd /c/ecidocs/settlement
+$ cut -f 1,2,3,4 -d ',' settlement_detail_report_batch_28.csv
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+sed :
+sed stands for Stream Editor and it effectively allows us to do a search and replace on our data. It is quite a powerful command but we will use it here in it's basic format.
+A basic expression is of the following format:
+s/search/replace/g
+sed <expression> [path]
+The initial s stands for substitute and specifies the action to perform (there are others but for now we'll keep it simple). Then between the first and second slashes ( / ) we place what it is we are searching for. Then between the second and third slashes, what it is we wish to replace it with. The g at the end stands for global and is optional. If we omit it then it will only replace the first instance of search on each line. With the g option we will replace every instance of search that is on each line
+-- sed 's/oranges/bananas/g' mysampledata.txt
+It's important to note that sed does not identify words but strings of characters. Try running the example above yourself but replacing oranges with es and you'll see what I mean. The search term is also actually something called a regular expression which is a means to define a pattern
+--  sed 's/shitij/shitijkhanna/g' error-localhost-ES1-appserver0.log
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+uniq :
+uniq stands for unique and it's job is to remove duplicate lines from the data. One limitation however is that those lines must be adjacent (ie, one after the other). 
+uniq mysampledata.txt
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Find all files containing some text
+egrep :
+To identify every line which contained the string mellon
+egrep 'mellon' mysampledata.txt
+
+egrep -n 'mellon' mysampledata.txt
+
+egrep 'sometext' ./*.txt
+grep 'sometext' ./*.txt
+grep -i 'text' // ignore case
+grep abc // search for matching patterns with abc
+grep -w "abc" // matches only abc and not abcd , abcde , using -w
+ // Searches for all txt files in current location which contain text 'Shitij'
+Regular expressions : 
+. (dot) - a single character.
+? - the preceding character matches 0 or 1 times only.
+* - the preceding character matches 0 or more times.
++ - the preceding character matches 1 or more times.
+{n} - the preceding character matches exactly n times.
+{n,m} - the preceding character matches at least n times and not more than m times.
+[agd] - the character is one of those included within the square brackets.
+[^agd] - the character is not one of those included within the square brackets.
+[c-f] - the dash within the square brackets operates as a range. In this case it means either the letters c, d, e or f.
+() - allows us to group several characters to behave as one.
+| (pipe symbol) - the logical OR operation.
+\s - any whitespace character
+^ - matches the beginning of the line.
+$ - matches the end of the line.
+
+-- Let's say we wish to identify any line with two or more vowels in a row. In the example below the multiplier {2,} applies to the preceding item which is the range.
+egrep '[aeiou]{2,}' mysampledata.txt
+
+How about any line with a 2 on it which is not the end of the line. In this example the multiplier + applies to the . which is any character.
+egrep '2.+' mysampledata.txt
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Wildcards:
+
+Here is the basic set of wildcards:
+* - represents zero or more characters
+? - represents a single character
+[] - represents a range of characters
+
+e.g. 
+/c/MyDocs/Neha
+ls Neha* // lists all files starting with 'Neha'
+ls b*
+The mechanism here is actually kinda interesting. On first glance you may assume that the command above ( ls ) receives the argument b* then proceeds to translate that into the required matches. It is actually bash (The program that provides the command line interface) that does the translation for us. When we offer it this command it sees that we have used wildcards and so, before running the command ( in this case ls ) it replaces the pattern with every file or directory (ie path) that matches that pattern. We issue the command:
+
+  ls b*
+Then the system translates this into:
+
+ls barry.txt blah.txt bob
+and then executes the program. The program never sees the wildcards and has no idea that we used them. This is funky as it means we can use them on the command line whenever we want. We are not limited to only certain programs or situations.
+--- Every file with an extension of txt at the end. In this example we have used an absolute path. Wildcards work just the same if the path is absolute or relative.
+-- ls /home/ryan/linuxtutorialwork/*.txt
+--  ls /c/MyDocs/Neha/*.txt
+
+--- Now let's introduce the ? operator. In this example we are looking for each file whose second letter is i. As you can see, the pattern can be built up using several wildcards.
+  ls ?i* 
+  ls -l ??e*  // all files with 3rd letter as 'e' // '?' represents a single character, so adding a single ? means one character at beginning, two ? means there are 2 characters at beginning
+  ls -l ?e* // all files with 2nd character as 'e'
+--- Or how about every file with a three letter extension. Note that video.mpeg is not matched as the path name must match the given pattern exactly. 
+  ls *.???  // all files with an extension of 3 characters (3 chars after dot)
+  ls *.?? // files with extension of 2 chars
+  
+ --And finally the range operator ( [ ] ). Unlike the previous 2 wildcards which specified any character, the range operator allows you to limit to a subset of characters. In this example we are looking for every file whose name either begins with a s or v.
+  ls [sv]*
+  ls -l [P]* // files starting with P
+  ls -l [PN]* // files starting with P or N
+
+  ls [sv]* // files starting with s or v
+ With ranges we may also include a set by using a hyphen. So for example if we wanted to find every file whose name includes a digit in it we could do the following:
+ ls *[0-9]* //
+ We may also reverse a range using the caret ( ^ ) which means look for any character which is not one of the following.
+ We may also reverse a range using the caret ( ^ ) which means look for any character which is not one of the following.
+ ls [^a-k]* // files not starting with characters from a-k
+   ls [^aBPj]* // files not starting with a,B,P,job
+   
+   
+Move file : 
+mv filename targetlocation.
+
+Rename file : 
+mv sourfile targetname/location   
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+VI Editor : 
+
+Escape mode / Command mode : to execute commands
+insert mode   : to write something
+
+from escape mode, press i to go to insert mode.
+and from insert mode, press escape to go to escape mode
+
+In insert mode : 
+:w -- save
+:q -- quit
+
+   
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------   
+Real world examples : 
+Move all files of type either jpg or png (image files) into another directory.
+
+mv /c/MyDocs/Neha/*.??g c/ecidocs/settlement  // moves all files with extension in directory /mydocs/neha ending with 'g' to another directory     
+ls -lh /home/*/.bash_history // Find out the size and modification time of the .bash_history file in every users home directory. (.bash_history is a file in a typical users home directory that keeps a history of commands the user has entered on the command line. Remember how the . means it is a hidden file?) As you can see in this example, we may use wildcards at any point in the path.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Every program we run on the command line automatically has three data streams connected to it.
+
+STDIN (0) - Standard input (data fed into the program)
+STDOUT (1) - Standard output (data printed by the program, defaults to the terminal)
+STDERR (2) - Standard error (for error messages, also defaults to the terminal)
+
+--- Redirecting to a File :
+The greater than operator ( > ) indicates to the command line that we wish the programs output (or whatever it sends to STDOUT) to be saved in a file instead of printed to the screen.
+ls
+gives -- > barry.txt bob example.png firstfile foo1 video.mpeg
+ls > myoutput
+ls
+gives -- > barry.txt bob example.png firstfile foo1 myoutput video.mpeg
+
+Let's break it down:
+
+ls 
+-- Let's start off by seeing what's in our current directory.
+ls > myoutput 
+-- Now we'll run the same command but this time we use the > to tell the terminal to save the output into the file myoutput. You'll notice that we don't need to create the file before saving to it. The terminal will create it automatically if it does not exist.
+ls
+As you can see, our new file has been created.
+cat myoutput
+Let's have a look at what was saved in there.
+
+--- Saving to an Existing File
+If we redirect to a file which does not exist, it will be created automatically for us. If we save into a file which already exists, however, then it's contents will be cleared, then the new output saved to it.
+-- wc -l barry.txt > myoutput  // will override the myoutput file with the result of this command
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+PROCESSES:
+
+See what is running:
+--> top
+--- killing a process :
+ ps aux | grep 'firefox'
+ kill <processid>
+
+ Sometimes you are lucky and just running kill normally will get the process to stop and exit. When you do this kill sends the default signal ( 1 ) to the process which effectively asks the process nicely to quit. We always try this option first as a clean quit is the best option. Sometimes this does not work however. In the example above we ran ps again and saw that the process was still running. No worries, we can run kill again but this time supply a signal of 9 which effectively means, go in with a sledge hammer and make sure the process is well and truly gone.
+ 
+kill -9 6978
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Scripts : 
+
+Variables : 
+$1, $2, ...
+The first, second, etc command line arguments to the script.
+variable=value
+
+To set a value for a variable. Remember, no spaces on either side of =
+Quotes " '
+
+Double will do variable substitution, single will not.
+
+variable=$( command )
+myvar=$( ls /etc | wc -l )
+Save the output of a command into a variable
+
+export var1
+Make the variable var1 available to child processes. 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Ask the User for Input : 
+If we would like to ask the user for input then we use a command called read. This command takes the input and will save it into a variable. 
+echo Hello, who am I talking to?
+read varname
+echo It\'s nice to meet you $varname
+
+I had to put a backslash ( \ ) in front of the ' so that it was escaped.
+
+----- More with Read
+You are able to alter the behaviour of read with a variety of command line options. (See the man page for read to see all of them.) Two commonly used options however are -p which allows you to specify a prompt and -s which makes the input silent. This can make it easy to ask for a username and password combination like the example below:
+
+E.g : 
+read -p 'Username: ' uservar
+read -sp 'Password: ' passvar
+echo
+echo Thankyou $uservar we now have your login details
+
+Run : 
+./login.sh
+Username: ryan
+Password:
+Thankyou ryan we now have your login details
+
+
+----- So far we have looked at a single word as input. We can do more than that however.
+read car1 car2 car3
+echo Your first car was: $car1
+echo Your second car was: $car2
+echo Your third car was: $car3
+
+read varName
+Read input from the user and store it in the variable varName.
+/dev/stdin
+A file you can read to get the STDIN for the Bash script
+
+Linking of files : 
+You can link files so that when you change a file, the same change happens in the other file also.
+You can also create symbolic links which are virtual links, but real hard links create a new file which is always linked to the original file and will also stay even if the original file is removed. 
+
+Unlink command : 
+unlink <filename>:
+unlinks the link from the file, and clears up the memory..more or less like delete. When there are more links to the file, it removes the current link. when no of links go to 0, the file is gone.
+
+Show partitions : 
+fdisk -l
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Practice : 
+
+Now let's make some decisions.
+
+Create a Bash script which will take 2 numbers as command line arguments. It will print to the screen the larger of the two numbers.
+Create a Bash script which will accept a file as a command line argument and analyse it in certain ways. eg. you could check if the file is executable or writable. You should print a certain message if true and another if false.
+Create a Bash script which will print a message based upon which day of the week it is (eg. 'Happy hump day' for Wedensday, 'TGIF' for Friday etc).
+Create a simple script which will print the numbers 1 - 10 (each on a separate line) and whether they are even or odd.
+Write a Bash script which will take a single command line argument (a directory) and will print each entry in that directory. If the entry is a file it will print it's size. If the entry is a directory it will print how many items are in that directory.
+Create a command line version of the game Mastermind. Instead of coloured marbles you could use letters or numbers or be creative and find another way.
+--------------------------------------------------------------------------
+Monitoring :
+
+Users : 
+w - > see who is logged in
+last - list of last logged users
+password Shitij -  change pwd for user Shitij
+
+.. pwd for user -> in /etc/shadow file...
+this is in hashed form
+
+..usermod -L Shitij
+locks user Shitij
+
+Add User : 
+userAdd command
+--------------------------------------------------------------------------
+Groups : 
+id nlshikha  -- see which groups user nlshikha is part of
+response : gid --> primary group id
+
+/etc/group file shows all groups
+/etc/sudoers  --> shows sudoers file
+u can add group to sudoers file, then users of that group can execute all commands.
+
+file Permissions : 
+Where u see root root or nlshikha root, shows the user and group
+
+1st one is user permission
+2nd one is group permission.
+also in the syntax  drrrrrr, ignore the first d.
+then first rrr is for user permission,
+2nd rrr is for group permission
+
+RWX : 
+Read write execute
+Read : directory : means u can see its contents, for file it means u can see the file
+write : to the directory, or to file.
+execute : for dirctory, means u can go in the directory. For file means u can run the file as program.
+4	read
+2	write
+1	execute
+For each class of user, one digit can be used to represent their permissions; using the example above, we could represent the symbolic permission of rwxr-xr-- using the three-digit octal number 754. The order of the digits is always the same: User, Group, Other.
+
+Regarding file permissions and umask:
+https://www.computerhope.com/unix/uumask.htm#:~:text=The%20umask%20masks%20permissions%20by%20restricting%20them%20by%20a%20certain%20value.&text=The%20result%20is%20that%20the,and%20777%20for%20a%20directory.
+
+
+In numbers : 
+7 - read write and exexute
+5 : read and execute
+Sticky bits ?
+How to programs run as different users ? 
+--------------------------------------------------------------------------
+
+How do we know what files does a new user need ? 
+/etc/skel directory.
+
+Whatever files are there in the directory : '/etc/skel' would be available to any new user created.
+If u want to provide some directories to a new user, add them here.
+
+Super Users : 
+Have access to change anything, any file.
+
+Linux repositories and distribution
+Daemons and processes.
+Compilers : Gcc - makefile / source code to binary file ? 
+
+Questions : 
+http://www.harisystems.com/tutorial/linuxqa/linuxqa_series6.php
+https://www.linuxtrainingacademy.com/linux-system-administrator-and-devops-interview-questions/
+
+
+
+https://www.youtube.com/watch?v=Yh_CQWPqmGo : copy paste in file
+https://www.youtube.com/watch?v=YS9PZJ-c7ps : copy paste from 1 file to another
