@@ -1,0 +1,68 @@
+Questions : 
+
+Java & Spring Boot
+How does Spring Boot simplify microservices development compared to traditional Spring?
+Can you explain the Spring Boot auto-configuration mechanism?
+How do you handle exceptions in Spring Boot applications?
+What are the different scopes of Spring beans, and when would you use each?
+How do you optimize the performance of a Spring Boot application?
+How does Spring Security work, and how do you implement JWT-based authentication? How does Oauth work ? 
+What is the difference between @RestController and @Controller in Spring Boot?
+How would you design a high-throughput REST API in Spring Boot?
+
+Elasticsearch
+How does Elasticsearch handle distributed search and indexing?
+What are shards and replicas in Elasticsearch? How do they impact performance?
+Can you explain the differences between term-based queries and full-text queries?
+How do you optimize Elasticsearch queries for large datasets?
+What are some best practices for indexing and querying time-series data in Elasticsearch?
+How do you handle data ingestion and processing using Logstash or Beats?
+Have you ever faced performance bottlenecks in Elasticsearch? How did you resolve them?
+
+Architecture & Design Patterns
+What are some common design patterns used in microservices architecture?
+How do you ensure fault tolerance and resilience in a distributed system?
+What is the role of circuit breakers in microservices?
+How do you handle API versioning in a microservices-based system?
+How do you approach database design for a large-scale, high-traffic application?
+
+Leadership & Delivery Management
+How do you manage and deliver large-scale projects with multiple dependencies?
+Have you ever handled conflicts in a team? How did you resolve them?
+How do you ensure code quality and adherence to best practices in a team?
+How do you manage project timelines and ensure on-time delivery?
+How do you handle client expectations and changes in project scope?
+Can you describe a situation where you improved the efficiency of a development process?
+What KPIs do you track for successful project delivery?
+
+DevOps & Cloud Integration
+How do you deploy a Spring Boot application in a Kubernetes cluster?
+What are the benefits of using Docker with Spring Boot applications?
+How do you configure and manage Elasticsearch in a cloud environment like AWS or Azure?
+What CI/CD pipelines have you worked with, and how do they improve software delivery?
+How do you monitor and log microservices in production?
+Would you like me to refine these based on your specific interests or experiences?
+-----------------------------------------------------------------------------
+
+Core Java, spring va spring boot, ci cd, rest controller, micro services, encryption, 
+simple database queries, version of micro services
+idempotency 
+
+Sunday : 
+questions java 8 
+threading  -- executor framework - 
+wrapper classes 
+Oauth / JWT : 
+Spring int ques   
+System design   
+SOLID principles  
+
+
+Jvm, heap stack, garbage collection, equals vs ==
+Servlets, docker and kubernetes
+
+design principles you use ? 
+design patterns you use ? 
+
+
+-----------------------------------------------------------------------------

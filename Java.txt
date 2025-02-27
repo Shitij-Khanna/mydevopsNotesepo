@@ -1,9 +1,14 @@
+https://github.com/Shitij-Khanna/Microservices_Spring/blob/master/Topics
+
 ---------------------
 OPP Solid Principles
 ---------------------
 https://javarevisited.blogspot.com/2018/07/10-object-oriented-design-principles.html
 https://howtodoinjava.com/best-practices/5-class-design-principles-solid-in-java/
 https://javarevisited.blogspot.com/2015/06/difference-between-inheritance-and-Composition-in-Java-OOP.html
+
+Code Decode playlist for java questions : 
+https://www.youtube.com/watch?v=PwiuAebCruY&list=PLyHJZXNdCXscoyL5XEZoHHZ86_6h3GWE1
 
 =====================
 Concurrent
@@ -100,6 +105,10 @@ https://www.java67.com/2017/08/top-17-sql-and-unix-interview-questions.html
 
 Design patterns microservices : 
 https://dzone.com/articles/design-patterns-for-microservices
+https://medium.com/design-microservices-architecture-with-patterns : Mehmet ozkaya 
+
+Event storming : 
+https://medium.com/@samar.benamar/event-storming-the-storm-that-cleans-up-the-mess-b2bb578db7c
 
 My questions : 
 
@@ -175,6 +184,7 @@ https://www.java-professionals.nl/?gclid=CjwKCAiAjoeRBhAJEiwAYY3nDGjKPv9fr8agKYB
 
 dutch : 
 https://adappel.nl/lesmateriaal
+https://www.adappel.nl/abonnementsprijzen
 
 Vault : 
 https://www.baeldung.com/vault
@@ -210,6 +220,12 @@ Python :
 https://www.youtube.com/watch?v=ZyhVh-qRZPA&list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS
 https://www.youtube.com/playlist?list=PLfFghEzKVmjsNtIRwErklMAN8nJmebB0I with ML
 
+Machine learning python Siddhardham : 
+https://www.youtube.com/watch?v=-KYiefj2wuw&list=PLfFghEzKVmjsNtIRwErklMAN8nJmebB0I&index=24
+
+Python NLP : 
+https://www.youtube.com/playlist?list=PLeo1K3hjS3uuvuAXhYjV2lMEShq2UYSwX
+
 AI : 
 https://dswharshit.medium.com/roadmap-to-become-an-ai-engineer-roadmap-6d9558d970cf
 
@@ -221,8 +237,12 @@ https://www.youtube.com/watch?v=rVYPaCmz2cc&list=PLhLKc18P9YODdrbyuA52Zn9-kwboIO
 System design : 
 https://bytebytego.com/intro/system-design-interview
 
-Gen AI:
+Gen AI, Krish:
 https://www.youtube.com/@krishnaik06/playlists
+https://www.youtube.com/watch?v=bFB4zqkcatU&list=PLZoTAELRMXVO_NfdHEBQylsAY2y789pXA&index=1
+
+Machine learning Krish : 
+https://www.youtube.com/playlist?list=PLZoTAELRMXVPBTrWtJkn3wWQxZkmTXGwe
 
 OAuth: 
 https://www.youtube.com/watch?v=ZV5yTm4pT8g
@@ -236,3 +256,15 @@ https://www.youtube.com/watch?v=jUYNS90nq8U
 webflux with eureka : 
 https://medium.com/nerd-for-tech/service-discovery-in-microservices-spring-boot-web-flux-3029f1cf6e68
 https://spring.io/guides/gs/spring-cloud-loadbalancer
+
+WAL logs : 
+https://medium.com/@vinciabhinav7/write-ahead-logs-but-why-494c3efd722d
+
+API composition pattern 
+https://medium.com/@vinciabhinav7/api-composition-pattern-why-it-is-becoming-an-industry-standard-f82a875503bd
+
+Service Mesh : 
+https://www.geeksforgeeks.org/service-mesh-in-microservices/
+
+System design : 
+https://interviewready.io/
