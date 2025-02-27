@@ -1,0 +1,141 @@
+
+https://australiapost.jira.com/wiki/spaces/LOD/pages/606835424/Tech+Decision+Register
+https://australiapost.jira.com/wiki/spaces/LOD/pages/619741446/Technology+Stack
+https://australiapost.jira.com/wiki/spaces/LOD/pages/630457209/Authentication+and+Authorisation+Model
+
+
+1. API Gateway - Spring Cloud Gateway/Netflix's Zuul Proxy/L7/Kong with Intershop - https://www.javacodegeeks.com/2019/01/api-gateways-going-identity-crisis.html
+   https://whatis.techtarget.com/definition/API-gateway-application-programming-interface-gateway
+2. Gatling performance suite
+3. AWS API and Lambda deployments
+4. AWS Codepipeline
+5. AWS ECS/ECR with Fargate - https://australiapost.jira.com/wiki/spaces/LOD/pages/623314338/Fargate+Container+Deployment
+6. Containers/Dockers/ Docker Compose - https://www.baeldung.com/dockerizing-spring-boot-application
+7. Kubernetes
+8. Open API Spec
+9. Swagger
+10. Cucumber/Spock/Geb/RESTeasy - https://phauer.com/2019/focus-integration-tests-mock-based-tests/ | https://techbeacon.com/app-dev-testing/how-perform-api-testing-rest-assured
+11. JaCoCo & Cobertura
+12. App Mesh
+13. Blue/Green deployment
+14. Canary deployment
+15. Mob Programming
+16. Configuration management tool - Chef/Puppet, AWS Cloud Formation template
+17. Python
+18. Identity Providor (IdP) and IAM - Azure AD/CSSO/Okta - https://developer.okta.com/blog/2017/08/17/why-jwts-suck-as-session-tokens
+19. REST API Authentication
+20. SumoLogic
+21. Fluentd (Fluent Bit) - https://github.com/microservices-demo/log-server | https://fluentbit.io/documentation/0.8/output/forward.html
+22. Apache Kaafka - https://www.waytoeasylearn.com/search/label/Kafka | https://aws.amazon.com/msk/
+23. Apache Ignite - https://www.youtube.com/watch?v=5OZmqO5D-7o
+24. NewRelic - https://docs.datadoghq.com/getting_started/
+25. X-Ray tracing
+26. Caching - https://www2.hazelcast.com/caching-strategies-javacode / https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/
+27. DynamoDB/Redis
+28. PEN testing
+29. PosgreSQL
+30. Hibernate 5 + HikariCP
+31. Spring 4 - https://www.baeldung.com/spring-vs-spring-boot | https://github.com/in28minutes/SpringBootForBeginners | https://start.spring.io/
+32. Spring Boot - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-starter | https://www.springboottutorial.com/ | https://www.youtube.com/watch?v=Ke7Tr4RgRTs |
+| https://www.youtube.com/watch?v=PSP1-2cN7vM&list=PLBBog2r6uMCRzaJqr-uUC8gakwSxkPSBh
+33. Microservice architecture (Spring Boot and JavaSpark and Micronaut ) - https://micronaut.io/ | https://www.kennybastani.com/2015/07/spring-cloud-docker-microservices.html 
+| https://dzone.com/articles/what-is-microservices-an-introduction-to-microserv | https://microservices.io/patterns/microservices.html
+| https://martinfowler.com/articles/microservices.html | https://www.youtube.com/watch?v=CZ3wIuvmHeM | https://dzone.com/articles/microservices-tutorial-learn-all-about-microservic
+34. Snyk, Contrast
+35. AWS Redshift
+36. AWS QuickSight
+37. AWS RDS
+39. Angular7 - https://confluence.intershop.de/display/CMEINTER/Angular | https://www.youtube.com/watch?v=Fdf5aTYRW0E
+40. Apache Cordova/Ionic
+41. Vultr (for hosting)
+42. IoT - https://www.particle.io/
+43. AWS services and implementations (i.e. VPCs, SES, RC2, R3, Route 53, Cloud Formation, etc.)
+44. CNCF - https://www.cncf.io/
+45. Infrastructure as a Code (IaaC), AWS CDK (Infrastructure Pipeline ->Cloud Formation template -> Infrastructure) - https://www.thorntech.com/2018/04/15-infrastructure-as-code-tools/
+46. Agile, Scrum, SAFe - https://www.quora.com/What-s-the-difference-between-Agile-Scrum-and-SAFe
+47. CI (Jenkins, Bamboo, Gitlab, Codepipeline) - https://dzone.com/articles/what-is-cicd
+48. AWS Steps Function
+49. Apache Camel - retry, validate, enrich, transform/exchange, operate/connect across different protocol (HTTP/SOAP/FTP/RPC). Not good for HTTP, lacks tooling. No persistent state
+50. Validation Framework - https://github.com/making/yavi | https://dzone.com/articles/validation-in-java-applications | https://medium.com/@jplanes/lambda-validations-with-java-8-86aa8143bd9f
+51. Diagrams - http://sketchboard.me/  | https://www.websequencediagrams.com/  
+52. Amazon Marketplace Shipping Service (MSS)
+53. Git Submodule
+54. Single repo vs multiple repo
+55. Java Spark
+56. DevOps model - https://resources.collab.net/devops-101/what-is-devops
+57. Text Editor - https://textmechanic.com/text-tools/all-in-one-tool/text-manipulation-notepad/
+58. Decision model & notation - https://www.omg.org/dmn/
+59. SAML - https://www.onelogin.com/learn/saml
+60. Eureka Discovery Service - https://github.com/Netflix/eureka/wiki/Eureka-at-a-glance | https://www.baeldung.com/spring-cloud-netflix-eureka
+61. Machine Learning - https://aws.amazon.com/blogs/aws/new-predictive-scaling-for-ec2-powered-by-machine-learning/
+62. Blockchain
+63. Big Data
+64. Java8/11 - https://www.simplilearn.com/resources-to-learn-java-programming-article | http://www.javapractices.com/home/HomeAction.do | https://sdkman.io/
+65. ELK Stack
+66. Elastic Search - https://logz.io/blog/solr-vs-elasticsearch/
+67. SOLR
+68. JWT
+69. Methodology for building modern, scalable, maintainable - https://12factor.net/
+70. Software Architecture - https://www.javacodegeeks.com/2019/01/selecting-software-architecture.html
+71. Circuit Breakers - https://spring.io/guides/gs/circuit-breaker/ (Netflix Hystrix fault tolerance library)
+72. Planning - https://www.optaplanner.org/
+72. Smartspeak IVR
+73. ElectronJS
+74. eventbrite and meetups
+75. Good Reads - https://pudding.cool/ | Billion Dollar App | ScienceAlert | SimpleCapacity | TED | 
+76. RANDOM - https://jsnes.fir.sh/
+77. Cloud - https://github.com/localstack/localstack
+78. Password Storage - https://keepassxc.org/ | https://www.passwordstore.org/ | https://github.com/passff/passff | ​https://qtpass.org/
+79. Feature Factory - https://www.industriallogic.com/blog/transcend-the-feature-factory-mindset-using-modern-agile-and-okr/
+80. Proxy (Egress) - 
+81. GraalVM - https://www.graalvm.org/docs/reference-manual/languages/jvm/ | https://australiapost.jira.com/wiki/spaces/LOD/pages/623445028/AWS+lambda+in+java+with+GraalVM | https://royvanrijn.com/blog/2018/09/part-2-native-microservice-in-graalvm/#results
+82. Serverless Environment - GraalVM & Lambda - where to use Lambda?
+83. CD (API Deployer, Terraform, AWS Code deploy)
+84. Container Registry - ECR, Nexus
+85. Container Clustering - ECS
+86. Configuration Repository - AWS Parameter store, EA Code, AWS Secrets Manager
+87. Key Management (encryption/decryption) - KMS
+88. Runtim environment - Lambda, EC2, Docker on EC2, Docker on Kubernetes, Docker on ECS, Docker/AWS Fargate
+89. Queue/Event Driven - ActiveMQ, SQS/SNS/ Apache Kafka
+90. Java Runtine - Oracle OpenJDK, Corretto, AdopJDK, Azul Zulu. JVM's implementation - Oracle Hotspot, Eclipse OpenJ9 (https://royvanrijn.com/blog/2018/05/openj9-jvm-shootout/)
+91. Kotlin
+92. Authorisation - OUTH 2.0
+93. Red/Green view of stacks
+94. Distributed tracing - Zipkin, NewRelic (https://docs.newrelic.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces), Amazon Cloud (Amazon cloud)
+95. NGINX, HTTP Apache, Tengine - http://tengine.taobao.org/ | https://www.systemcodegeeks.com/web-servers/nginx/introduction-to-nginx-complete-tutorial/
+96. NodeJS - https://read.acloud.guru/node-is-the-wrong-runtime-for-serverless-jk-c69595f6a8eb
+97. Healthchecks - Shallow, deep
+98. Changelog - git-changelog-lib, Mustache template - https://australiapost.jira.com/wiki/spaces/LOD/pages/629015309/Code+Pipeline+-+Stage+Transition
+99. Logging of microservices deployed as lamda functions - https://australiapost.jira.com/wiki/spaces/LOD/pages/632914037/Lambda+Logging+-+Sumologic
+100. Code Quality Matrics
+101. CDP - https://semaphoreci.com/blog/cicd-pipeline | https://devops.com/continuous-delivery-pipeline/ | https://docs.gitlab.com/ee/ci/
+102. AWS Cloudwatch for monitoring
+103. Mobile App development - Android, iOS
+104. DI Library - Dagger
+105. Logstash (grok, geoip) - https://medium.com/tensult/the-log-battle-logstash-and-fluentd-c65f2f7c24b4 | https://www.elastic.co/downloads/logstash
+106. ConEmu - windows multiple tabs CLI
+107. EFK stack - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-elasticsearch-fluentd-and-kibana-efk-logging-stack-on-kubernetes | https://medium.com/@jbsazon/aggregated-kubernetes-container-logs-with-fluent-bit-elasticsearch-and-kibana-5a9708c5dd9a | https://technology.amis.nl/2019/05/06/using-elasticsearch-fluentd-and-kibana-for-log-aggregation/
+108. Kibana - https://www.elastic.co/downloads/kibana
+109. Beats (Filebeat) - https://www.elastic.co/downloads/beats/filebeat
+110. Gitlab, BitBucket, GitHub, Pull Panda
+111. Intelligence tool - Code Climate - https://angel.co/company/code-climate
+112. Code review platform - https://angel.co/company/percy
+113. Reporting tool of code coverag - https://angel.co/company/codecov
+114. Hateoas
+115. Application Server/Servlet Container, Tomcat, JBoss (WildFly)
+116. JBoss Undertow - both web server and servlet container, and fully embeddable - http://undertow.io/
+117. Ant+Ivy, Maven, Gradle - https://www.baeldung.com/ant-maven-gradle
+118. Full Stack Development - https://youtu.be/SWXuXhZkNQc | https://github.com/TechPrimers/stock-price-viewer-microservices-part1 | https://www.youtube.com/watch?v=rlS9eH5tEnY
+119. Spring Cloud (e.g. configuration management, service discovery, circuit breakers, intelligent routing, micro-proxy, control bus, one-time tokens, global locks, leadership election, distributed sessions, cluster state) - https://spring.io/blog/2014/06/03/introducing-spring-cloud | https://spring.io/projects/spring-cloud
+120. Feign Client
+121. Spring Cloud Data Flow
+122. Spring Cloud Configuration Management
+123. Zookeeper (Service discovery, configuration management) - https://spring.io/projects/spring-cloud-zookeeper
+124. Datadog - Cloud monitoring service
+125. Logback - https://www.baeldung.com/logback | https://www.baeldung.com/custom-logback-appender | https://logback.qos.ch/manual/appenders.html
+126. Fluency - https://github.com/komamitsu/fluency
+127. OKR - https://en.wikipedia.org/wiki/OKR
+128. Hateos principles - https://examples.javacodegeeks.com/enterprise-java/spring/boot/spring-boot-hateoas-in-rest-api-example/
+129. React JS
+130. Vue JS
+

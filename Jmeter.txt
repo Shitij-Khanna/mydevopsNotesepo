@@ -1,0 +1,5 @@
+Jmeter : 
+
+cd C:\Setups\Jmeter\apache-jmeter-5.2.1\bin
+
+run jmeter.bat

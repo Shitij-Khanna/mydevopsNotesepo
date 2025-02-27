@@ -1,0 +1,26 @@
+
+React : 
+Event handlign : 
+https://www.freecodecamp.org/news/this-is-why-we-need-to-bind-event-handlers-in-class-components-in-react-f7ea1a6f93eb/
+Dummy API : https://jsonplaceholder.typicode.com/
+
+React with redux, typescript and thunk :
+https://www.youtube.com/watch?v=9boMnm5X9ak&list=PLC3y8-rFHvwheJHvseC3I0HuYI2f46oAK
+https://www.youtube.com/watch?v=MUs4oAudvO0&list=PL06z42zB6YZ8v_Rop4ym29KANKKhc1zhw
+
+Materialize CSS :
+https://materializecss.com/getting-started.html
+
+React 
+Redux multiple actions and reducers
+Thunk
+Materialize css
+React hooks and contexts
+React projects
+
+Typescript
+Pure component
+Webpack
+
+Router : 
+npm install react-router-dom

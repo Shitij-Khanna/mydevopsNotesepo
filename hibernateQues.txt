@@ -1,0 +1,85 @@
+Course content
+9 sections • 39 lectures • 1h 39m total length
+Preview
+03:33
+How to master Hibernate Interview Questions?
+00:29
+Disclaimer
+00:38
+Preview
+03:06
+Preview
+03:03
+Preview
+03:10
+What are the key characteristics of Hibernate?
+03:27
+Can you tell us about the core interfaces of Hibernate framework?
+03:11
+Hibernate Interview Questions Quiz - 1
+5 questions
+How will you map the columns of a DB table to the properties of a Java class?
+02:04
+What are the steps for creating a SessionFactory in Hibernate?
+02:14
+Why do we use POJO in Hibernate?
+02:28
+What is Hibernate Query Language (HQL)?
+03:03
+How will you call a stored procedure in Hibernate?
+03:19
+Hibernate Interview Questions Quiz - 2
+5 questions
+What is Criteria API in Hibernate?
+02:33
+What are the different types of collections supported by Hibernate?
+02:14
+What are the advantages of Hibernate framework over JDBC?
+03:22
+What is the Transient state of an object in Hibernate?
+02:28
+What is the use of Dirty Checking in Hibernate?
+02:15
+Hibernate Interview Questions Quiz - 3
+5 questions
+What are the different ORM levels in Hibernate?
+03:05
+What are the different ways to configure a Hibernate application?
+02:14
+What are the different types of Association mappings supported by Hibernate?
+02:55
+What is Unit of Work design pattern?
+02:47
+How will you order the results returned by a Criteria in Hibernate?
+02:29
+Hibernate Interview Questions Quiz - 4
+5 questions
+How does Transaction management work in Hibernate?
+02:28
+What are the different options to retrieve an object from database in Hibernate?
+02:16
+How can we auto-generate primary key in Hibernate?
+02:19
+What are the different second level caches available in Hibernate?
+02:07
+What are the different fetching strategies in Hibernate?
+02:14
+Hibernate Interview Questions Quiz - 5
+5 questions
+What is the difference between Immediate and Lazy collection fetching?
+02:36
+What are the different strategies for cache mapping in Hibernate?
+02:15
+What is the difference between a Set and a Bag in Hibernate?
+02:31
+How can we monitor the performance of Hibernate in an application?
+02:36
+What is ‘the inverse side of association’ in a mapping?
+02:25
+What is the difference between load() and get() method in Hibernate?
+02:08
+What is a derived property in Hibernate?
+02:10
+What are the two locking strategies in Hibernate?
+03:50
+What is the use of session.lock() method in Hibernate?

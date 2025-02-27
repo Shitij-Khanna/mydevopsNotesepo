@@ -1,0 +1,22 @@
+Elastic search
+Dev console : 
+
+Search index /product-indexes : 
+/product-indexes/_search
+
+settings.json :
+high level info of index -- like no of shards, no of replicas
+
+mappings.json : 
+Different fields and the types of those fields in the index.
+like : 
+
+{
+	"name":
+	{	 type: "text",
+	    "analyzer" : "standard"
+	}
+}
+
+ 
+

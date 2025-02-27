@@ -1,0 +1,56 @@
+# Import data
+aws dynamodb batch-write-item --request-items file://mystore.json
+
+#### SCANS ####
+
+# Perform scan of ProductOrders table:
+aws dynamodb scan --table-name mystore
+
+# Use Page-Size Parameter:
+aws dynamodb scan --table-name mystore --page-size 1
+aws dynamodb scan --table-name mystore --page-size 2
+
+# Use Max-Items Parameter:
+aws dynamodb scan --table-name mystore --max-items 1
+
+# Use Projection-Expression Parameter:
+aws dynamodb scan --table-name mystore --projection-expression "created"
+aws dynamodb scan --table-name mystore --projection-expression "category"
+aws dynamodb scan --table-name mystore --projection-expression "colour"
+
+# Use Filter-Expression Parameter:
+aws dynamodb scan --table-name mystore --filter-expression "clientid = :username" --expression-attribute-values '{ ":username": { "S": "chris@example.com" }}'
+aws dynamodb scan --table-name mystore --filter-expression "size = :n" --expression-attribute-values '{ ":n": { "N": "12" }}'
+aws dynamodb scan --table-name mystore --filter-expression "size > :n" --expression-attribute-values '{ ":n": { "N": "12" }}'
+
+#### QUERIES ####
+
+# Use Key-Conditions Parameter:
+aws dynamodb query  --table-name mystore --key-conditions '{ "clientid":{ "ComparisonOperator":"EQ", "AttributeValueList": [ {"S": "chris@example.com"} ] } }'
+
+# Use Key-Condition-Expression Parameter:
+aws dynamodb query --table-name mystore --key-condition-expression "clientid = :name" --expression-attribute-values '{":name":{"S":"chris@example.com"}}'
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+Read Throughput : 
+(size of read rounded to the nearest 4kb chunk  / 4) * no of items = Read Throughput 
+Divide by 2 if eventually consistent
+
+Q. An application requires 10 items of 1 kb/s using eventual consistency. What is the read throughput ? 
+A. First we calculate how many read units per item we need. 
+
+Size of read rounded to nearest 4 kb, i.e. 1kb rounds to -> 4kb
+4kb / 4kb = 1
+
+No of items 10
+Read throughput = 1 * 10 = 10
+Eventualy consistent, so 10/2 = 5
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Write throughput :
+Q. An application requires 5 items of 10 kb/s . What is the write throughput ? 
+A. Each write unit consists of 1 kb of data. You need to write 5 items per second with each item using 10 kb of data.
+5 * 10 = 50 WCU 
+
+
+

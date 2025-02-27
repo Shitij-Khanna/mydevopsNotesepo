@@ -1,0 +1,56 @@
+CI Setup : 
+1. download from intershop, and adjust adjust build.gradle
+
+then run:
+gradlew intershopCISetupAll
+Creates gradle files. (including nexus urls, actually all TODOs need to be adjusted)
+
+2.
+Creates devops folders in the parent folder specified.
+Add and adjust gradle folder-init file propertoes, to add nexus urls etc. to be able to run deploy etc.
+gradle folders with gradle wrappers are also created which need to be put in every deplyoment script (under devops folders)
+
+Now run this command  from coprporate distributions folder: 
+
+gradlew publish -PstaticVersion=3.0.0 -PSnapshotRelease=false -PrunOnCI=true -PrepoUserName=nexus_sa -PrepoUserPasswd=nexus_sa -PreleaseURL=https://nexus-intershop.bookspot.nl/nexus/content/repositories/distributions
+
+this will ujpdate/create the distributions in nexus to tell it to use the release url ...
+we give the version PstaticVersion=3.0.0 to give the distribution number.
+nl-tba-3.0.0 is created in nexus for artifacts... nl-tba is picked from build.gradle.
+
+cannot run without PreleaseURL, if we dont give this it will only run on local.
+
+3. now the distribtuon whose path is in gradlew wwrapper is created in nexus with the above command.
+Inside the D:\eserver\eci\devops\deployments\eciproject\gradle\wrapper, we have the dstribution url to which the distributuon was uploaded.
+
+and inside "D:\eserver\eci\devops\gradle\corporate-distribution\gradle\wrapper", there is the distributionurl from where the gradle is downloaded and used to upload to nexus with the command in step 2. 
+
+
+4. Then we download the responsive starter store.
+copy the url from intershop  section 6.2.3 in document
+change the nexus url
+download the itnershop demo shop from the created url...
+Extract the demo cartridges in the eciproject folder....which was created from cisetupall.
+
+The assembly is inspired_b2c and b2x..
+Use the b2x version to rename it to the name we usse.
+also change in eciproject/build.gradle to rename the assembly project to the new name.
+And also update all settings.gradle in all deployments with the new name of assembly.
+
+
+
+https://support.intershop.com/kb/index.php/Display/L28731 : Guide - Quick Project Setup
+
+https://support.intershop.com/kb/index.php?c=Display&q1=279D85&sCookieConsent=yes
+
+https://support.intershop.com/kb/index.php/Display/27L679
+
+assembly project - build.gradle -> add acceptance or other environments.
+changes in 2-3 places, check current evironmnts like prod / dev
+
+https://support.intershop.com/kb/index.php/Display/27L679
+https://support.intershop.com/kb/index.php/Display/27L679#CookbookGradleDeploymentTools(7.4CIICM7.7)-Recipe-RegisterICMatEureka
+https://support.intershop.com/kb/index.php/Display/282B92#l100
+
+Setup for 7.9
+https://support.intershop.com/kb/index.php?c=Display&q1=282B92&sCookieConsent=yes

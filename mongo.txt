@@ -1,0 +1,19 @@
+{$and: [{status : {$ne : 'processing'}}, {order_item_relation: 1060}]}
+{status : {$ne : 'processing'}}
+{status : 'processing'}
+{status: {$ne : 'processing'}, order_item_relation: '1063'}
+
+{status: {$ne : 'processing'}, 'fulfilment_status_display.confirmed': 2,  order_item_relation: '1063'} 
+
+
+
+
+{$expr: {$gt: [{$add: ["$a", "$b"]}, 24]}}
+
+{$expr: {$ne: [{$add: ['$fulfilment_status_display.canceled', '$fulfilment_status_display.delivered']}, '$fulfilment_status_display.confirmed']}}
+
+{status: 'closed', $expr: {$ne: [{$add: ['$fulfilment_status_display.canceled', '$fulfilment_status_display.delivered']}, '$fulfilment_status_display.confirmed']}}
+
+{status: 'processing', $expr: [{$add: ['$fulfilment_status_display.canceled', '$fulfilment_status_display.delivered']}, '$fulfilment_status_display.confirmed']}
+
+{_id : ObjectId('5fce352ce7f22f03fa2cc263')}

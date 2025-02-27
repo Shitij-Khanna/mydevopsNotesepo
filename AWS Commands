@@ -1,0 +1,76 @@
+See buckets  : 
+aws s3 ls
+
+Named profiles: 
+aws configure --profile <UserName>
+aws configure --profile Shitij
+    Then give access key and secret key
+aws configure --profile Neha
+    Then give access key and secret key
+	
+To use specific profile : 
+aws s3 ls --profile Shitij
+aws s3 ls --profile Neha
+
+aws s3 help
+aws s3 cp help // help for copy commands
+to copy from source to target, from bucket to bucket
+
+
+aws s3 cp myfile s3://mybucket      -- copy myfile to mybucket
+aws s3 cp s3://mybucket/MyFile C:/MyDocs   -- copy MyFile from mybucket to mydocs
+aws s3 cp s3://mykopsbucket2neha/index.txt C:/MyDocs/Trips/Milan
+
+aws s3 cp C:/MyDocs/Trips/Milan s3://mykopsbucket2neha --recursive     -- copy all files in folder milan to the bucket
+
+aws s3 sync <sourcefolder> s3://targetbucket  -- sync folder locally with s3 bucket
+
+Create bucket : 
+aws s3 mb s3://mybucketName
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Launch instances : 
+aws ec2 run-instances --image-id ami-026dea5602e368e96 --instance-type t2.micro --count 1 --subnet-id subnet-6ff6e807 --key-name KeyPairForEC2Ohio --security-group-ids sg-0929d22cfe3d333fc
+
+	
+describe / list instances :
+aws ec2 describe-instances --filters "Name=tag:Name,Values=MyInstance"
+	
+ 
+Terminate your instance : 
+aws ec2 terminate-instances --instance-ids i-0b82a64bb73efa996
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Run lambda from CLI : 
+aws lambda invoke --function-name MyfunctionShitij --payload ewogICJrZXkxIjogInZhbHVlMSIsCiAgImtleTIiOiAidmFsdWUyIiwKICAia2V5MyI6ICJ2YWx1ZTMiCn0= response.json
+
+2. Get logs also on lambda invocation:
+aws lambda invoke --function-name MyfunctionShitij out --log-type Tail
+
+We get a base 64 encoded response of the log message from the above cmd
+
+3. Run a lambda function asynchronously : 
+aws lambda invoke --function-name DestinationDLQTestShitij --invocation-type Event --payload ewogICJzdWNjZXNzIjogImZhbHNlIgp9 response.json
+
+4. Create a lambda function with a role passed as parameter : 
+aws lambda create-function --function-name EventSourceSqsShitij --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::302952111485:role/lambda-sqs
+
+aws lambda create-function --function-name EventSourceSqsShitij --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --timeout 10 --memory-size 1024 --role arn:aws:iam::302952111485:role/lambda-sqs
+
+To create a mapping for an event source : 
+aws lambda create-event-source-mapping --function-name EventSourceSQS --batch-size 10 --event-source-arn arn:aws:sqs:us-east-2:302952111485:MyQueue
+
+To list event sources : 
+aws lambda list-event-source-mappings --function-name EventSourceSQS --event-source-arn arn:aws:sqs:us-east-2:302952111485:MyQueue
+
+Event and source mapping is the mapping of a lambda function to a queue, so that the lambda is binded to listen / poll messages from that queue and be triggered on receipt of the message.
+
+To  create lambda with permission to s3 to trigger it:
+aws lambda create-function --function-name CreateThumbnailShitij --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --timeout 10 --memory-size 1024 --role 
+
+Invoke with version :
+aws lambda invoke --function-name MyfunctionShitij:\$LATEST --payload ewogICJrZXkxIjogInZhbHVlMSIsCiAgImtleTIiOiAidmFsdWUyIiwKICAia2V5MyI6ICJ2YWx1ZTMiCn0= response.json
+
+Invoke with alias :
+aws lambda invoke --function-name MyfunctionShitij:myalias --payload ewogICJrZXkxIjogInZhbHVlMSIsCiAgImtleTIiOiAidmFsdWUyIiwKICAia2V5MyI6ICJ2YWx1ZTMiCn0= response.json

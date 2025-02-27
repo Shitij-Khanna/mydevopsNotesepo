@@ -1,0 +1,42 @@
+CLUSTER QUERY LANGUAGE:
+
+Cluster queries are expressions that enable you to group objects.
+
+For example, you can group container instances by attributes such as Availability Zone, instance type, or custom metadata.
+
+Expressions have the following syntax: subject operator [argument]
+
+Example 1: The following expression selects instances with the specified instance type.
+attribute:ecs.instance-type == t2.small
+attribute:ecs.instance-type == t2.small
+
+Example 2: The following expression selects instances in the us-east-1a or us-east-1b Availability Zone.
+attribute:ecs.availability-zone in [us-east-1a, us-east-1b]
+attribute:ecs.availability-zone in [us-east-1a, us-east-1b]
+
+Example 3: The following expression selects instances that are hosting tasks in the service:production group.
+task:group == service:production
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SERVICE SCHEDULER
+You can schedule ECS using Service Scheduler and Custom Scheduler.
+
+Ensures that the specified number of tasks is constantly running and reschedules tasks when a task fails.
+
+It can ensure tasks are registered against an ELB.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+AUTO SCALING
+Service Auto Scaling
+Amazon ECS service can optionally be configured to use Service Auto Scaling to adjust the desired task count up or down automatically.
+
+Service Auto Scaling leverages the Application Auto Scaling service to provide this functionality.
+
+Amazon ECS Service Auto Scaling supports the following types of scaling policies:
+
+Target Tracking Scaling Policies—Increase or decrease the number of tasks that your service runs based on a target value for a specific CloudWatch metric.
+Step Scaling Policies—Increase or decrease the number of tasks that your service runs in response to CloudWatch alarms. Step scaling is based on a set of scaling adjustments, known as step adjustments, which vary based on the size of the alarm breach.
+Scheduled Scaling—Increase or decrease the number of tasks that your service runs based on the date and time.
+
+

@@ -1,0 +1,229 @@
+See buckets  : 
+aws s3 ls
+
+
+Named profiles: 
+aws configure --profile <UserName>
+aws configure --profile Shitij
+    Then give access key and secret key
+aws configure --profile Neha
+    Then give access key and secret key
+	
+To use specific profile : 
+aws s3 ls --profile Shitij
+aws s3 ls --profile Neha
+
+aws s3 help
+aws s3 cp help // help for copy commands
+to copy from source to target, from bucket to bucket
+
+
+aws s3 cp myfile s3://mybucket      -- copy myfile to mybucket
+aws s3 cp s3://mybucket/MyFile C:/MyDocs   -- copy MyFile from mybucket to mydocs
+aws s3 cp s3://mykopsbucket2neha/index.txt C:/MyDocs/Trips/Milan
+
+aws s3 cp C:/MyDocs/Trips/Milan s3://mykopsbucket2neha --recursive     -- copy all files in folder milan to the bucket
+
+aws s3 sync <sourcefolder> s3://targetbucket  -- sync folder locally with s3 bucket
+
+Create bucket : 
+aws s3 mb s3://mybucketName
+
+Encryption 
+x-amz-server-side​-encryption​-customer-algorithm – Use this header to specify the encryption algorithm. The header value must be “AES256”.
+x-amz-server-side​-encryption​-customer-key – Use this header to provide the 256-bit, base64-encoded encryption key for Amazon S3 to use to encrypt or decrypt your data.
+x-amz-server-side​-encryption​-customer-key-MD5 – Use this header to provide the base64-encoded 128-bit MD5 digest of the encryption key according to RFC 1321. Amazon S3 uses this header for a message integrity check to ensure that the encryption key was transmitted without error.
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Launch instances : 
+aws ec2 run-instances --image-id ami-026dea5602e368e96 --instance-type t2.micro --count 1 --subnet-id subnet-6ff6e807 --key-name KeyPairForEC2Ohio --security-group-ids sg-0929d22cfe3d333fc
+
+	
+describe / list instances :
+aws ec2 describe-instances --filters "Name=tag:Name,Values=MyInstance"
+	
+ 
+Terminate your instance : 
+aws ec2 terminate-instances --instance-ids i-0b82a64bb73efa996
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Run lambda from CLI : 
+aws lambda invoke --function-name MyfunctionShitij --payload ewogICJrZXkxIjogInZhbHVlMSIsCiAgImtleTIiOiAidmFsdWUyIiwKICAia2V5MyI6ICJ2YWx1ZTMiCn0= response.json
+
+2. Get logs also on lambda invocation:
+aws lambda invoke --function-name MyfunctionShitij out --log-type Tail
+
+We get a base 64 encoded response of the log message from the above cmd
+
+3. Run a lambda function asynchronously : 
+aws lambda invoke --function-name DestinationDLQTestShitij --invocation-type Event --payload ewogICJzdWNjZXNzIjogImZhbHNlIgp9 response.json
+
+4. Create a lambda function with a role passed as parameter : 
+aws lambda create-function --function-name EventSourceSqsShitij --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::302952111485:role/lambda-sqs
+
+aws lambda create-function --function-name EventSourceSqsShitij --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --timeout 10 --memory-size 1024 --role arn:aws:iam::302952111485:role/lambda-sqs
+
+To create a mapping for an event source : 
+aws lambda create-event-source-mapping --function-name EventSourceSQS --batch-size 10 --event-source-arn arn:aws:sqs:us-east-2:302952111485:MyQueue
+
+To list event sources : 
+aws lambda list-event-source-mappings --function-name EventSourceSQS --event-source-arn arn:aws:sqs:us-east-2:302952111485:MyQueue
+
+Event and source mapping is the mapping of a lambda function to a queue, so that the lambda is binded to listen / poll messages from that queue and be triggered on receipt of the message.
+
+To  create lambda with permission to s3 to trigger it:
+aws lambda create-function --function-name CreateThumbnailShitij --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --timeout 10 --memory-size 1024 --role 
+
+Invoke with version :
+aws lambda invoke --function-name MyfunctionShitij:\$LATEST --payload ewogICJrZXkxIjogInZhbHVlMSIsCiAgImtleTIiOiAidmFsdWUyIiwKICAia2V5MyI6ICJ2YWx1ZTMiCn0= response.json
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CloudFormation Intrinsic functions : 
+
+Fn::Ref (or !Ref in YAML),
+
+Fn::GetAtt Fn::GetAtt: [ logicalNameOfResource, attributeName ] 
+!GetAtt logicalNameOfResource.attributeName
+
+Fn::FindInMap
+Fn::FindInMap: [ MapName, TopLevelKey, SecondLevelKey ]
+!FindInMap [ MapName, TopLevelKey, SecondLevelKey ]
+
+Fn::ImportValue
+
+Fn::Join
+Fn::Join: [ delimiter, [ comma-delimited list of values ] ]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+AWS Cloudwatch :
+
+--- DIMENSIONS
+In custom metrics, the –dimensions parameter is common.
+A dimension further clarifies what the metric is and what data it stores.
+You can have up to 10 dimensions in one metric, and each dimension is defined by a name and value pair.
+
+How you specify a dimension is different when you use different commands.
+With put-metric-data, you specify each dimension as MyName=MyValue, and with get-metric-statistics or put-metric-alarm you use the format Name=MyName, Value=MyValue.
+
+For example, the following command publishes a Buffers metric with two dimensions named InstanceId and InstanceType.
+aws cloudwatch put-metric-data --metric-name Buffers --namespace MyNameSpace --unit Bytes --value 231434333 --dimensions InstanceId=1-23456789,InstanceType=m1.small
+aws cloudwatch put-metric-data --metric-name Buffers --namespace MyNameSpace --unit  Bytes --value 23324234 --dimenstions InstanceId=1-2323423 instance-type=m2.small
+
+This command retrieves statistics for that same metric. Separate the Name and Value parts of a single dimension with commas, but if you have multiple dimensions, use a space between one dimension and the next.
+
+aws cloudwatch get-metric-statistics --metric-name Buffers --namespace MyNameSpace --dimensions Name=InstanceId,Value=1-23456789 Name=InstanceType,Value=m1.small --start-time 2016-10-15T04:00:00Z --end-time 2016-10-19T07:00:00Z --statistics Average --period 60
+
+aws cloudwatch get-metric-statistics --metric-name Buffers --namespace MyNameSpace --dimensions  Name=InstanceId,Value=1-23456789 Name=InstanceType,Value=m1.small --start-time 2016-10-15T04:00:00Z --end-time 2016-10-19T07:00:00Z --statistics Average --period 60
+
+If a single metric includes multiple dimensions, you must specify a value for every defined dimension when you use get-metric-statistics. For example, the Amazon S3 metric BucketSizeBytes includes the dimensions BucketName and StorageType, so you must specify both dimensions with get-metric-statistics.
+aws cloudwatch get-metric-statistics --metric-name BucketSizeBytes --start-time 2017-01-23T14:23:00Z --end-time 2017-01-26T19:30:00Z --period 3600 --namespace AWS/S3 --statistics Maximum --dimensions Name=BucketName,Value=MyBucketName Name=StorageType,Value=StandardStorage --output table
+
+--- Publishing Single Data Points
+To publish a single data point for a new or existing metric, use the put-metric-data command with one value and time stamp.
+For example, the following actions each publish one data point.
+aws cloudwatch put-metric-data --metric-name PageViewCount --namespace MyService --value 2 --timestamp 2016-10-20T12:00:00.000Z
+aws cloudwatch put-metric-data --metric-name PageViewCount --namespace MyService --value 4 --timestamp 2016-10-20T12:00:01.000Z
+aws cloudwatch put-metric-data --metric-name PageViewCount --namespace MyService --value 5 --timestamp 2016-10-20T12:00:02.000Z
+
+
+--- STATISTICS
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+IAM instance profiles : 
+You can use the following AWS CLI commands to work with instance profiles in an AWS account:
+
+Create an instance profile: aws iam create-instance-profile
+Add a role to an instance profile: aws iam add-role-to-instance-profile
+List instance profiles: aws iam list-instance-profiles, aws iam list-instance-profiles-for-role
+Get information about an instance profile: aws iam get-instance-profile
+Remove a role from an instance profile: aws iam remove-role-from-instance-profile
+Delete an instance profile: aws iam delete-instance-profile
+
+An explicit allow in an identity-based or resource-based policy overrides this default.
+If a permissions boundary, Organizations SCP, or session policy is present, it might override the allow with an implicit deny.
+An explicit deny in any policy overrides any allows.
+A few concepts should be known to understand the logic:
+Identity-based policies – Identity-based policies are attached to an IAM identity (user, group of users, or role) and grant permissions to IAM entities (users and roles).
+Resource-based policies – Resource-based policies grant permissions to the principal (account, user, role, or federated user) specified as the principal.
+IAM permissions boundaries – Permissions boundaries are an advanced feature that sets the maximum permissions that an identity-based policy can grant to an IAM entity (user or role).
+AWS Organizations service control policies (SCPs) – Organizations SCPs specify the maximum permissions for an organization or organizational unit (OU). Session policies – Session policies are advanced policies that you pass as parameters when you programmatically create a temporary session for a role or federated user.
+
+With STS you can request a session token using one of the following APIs:
+
+AssumeRole – can only be used by IAM users (can be used for MFA).
+AssumeRoleWithSAML – can be used by any user who passes a SAML authentication response that indicates authentication from a known (trusted) identity provider.
+AssumeRoleWithWebIdentity – can be used by an user who passes a web identity token that indicates authentication from a known (trusted) identity provider.
+GetSessionToken – can be used by an IAM user or AWS account root user (can be used for MFA).
+GetFederationToken – can be used by an IAM user or AWS account root user.
+STS AssumeRoleWithWebIdentity:
+
+Assume-role-with-web-identity is an API provided by STS (Security Token Service).
+Returns temporary security credentials for users authenticated by a mobile or web application or using a Web ID Provider like Amazon, Facebook or Google.
+For mobile applications, Cognito is recommended.
+Regular web applications can use the STS assume-role-with-web-identity API.
+
+Beanstalk : 
+Application -- Environment 
+Multiple versions within an application
+version can be deployed to any environment
+Deployment : All at once / rolling / Rolling with addnl batch / Immutable / Blue green
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-management-and-governance/aws-cloudformation/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-compute/aws-serverless-application-model-aws-sam/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-database/amazon-elasticache/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-management-and-governance/amazon-cloudwatch/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-developer-tools/aws-x-ray/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-analytics/amazon-kinesis/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-storage/amazon-s3/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-developer-tools/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-networking-and-content-delivery/amazon-api-gateway/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-security-identity-and-compliance/amazon-iam/
+
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-security-identity-and-compliance/aws-kms/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-security-identity-and-compliance/aws-cognito/
+https://digitalcloud.training/certification-training/aws-developer-associate/aws-compute/amazon-ecs/
+RDS, SAM, Cloudformation, S3 and S3 encryption, Codedeploy deployment models, API Gateway  
+System metrics and custom metrics
+Authentication with API gateway and Cognito, lambda or IAM
+ECS
+VPC Ec2 autoscanling exam cram
+https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_access-denied-service
+
+When to use /tmp directory
+https://www.examtopics.com/exams/amazon/aws-certified-developer-associate/view/
+https://free-braindumps.com/amazon/free-aws-certified-developer-associate-braindumps.html?p=5
+https://www.certification-questions.com/practice-exam/amazon/aws-certified-developer-associate
+https://www.dumpscollection.net/dumps/AWS-Certified-Developer-Associate/  - many pdfs
+
+An organization needs to add encryption in-transit to an existing website running behind an Elastic Load Balancer. The website’s Amazon EC2 instances are CPU-constrained and therefore load on their CPUs should not be increased. What should be done to secure the website? (Select TWO.)
+
+Practice Tests Neal : 
+1,2,3,4
+1,2, 3, 4 6 : Wrong answers revised only
+Revision full : 1,4 done,2 given again
+
+Test 5 full 
+Revise 1,2,3,4,6 
+Then again all questions high level revision (mainly wrong mine and earlier wrong ones)

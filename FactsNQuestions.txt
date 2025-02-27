@@ -1,0 +1,39 @@
+Important facts and questions :
+
+Spring uses the concept of Thread local and context holder in many of its classes.
+Uses context holder to hold the context.
+-- RequestContextHolder to hold the request attributes during the context of the request. Request in spring is handled by a single thread.
+-- SecurityContextHolder gives the context of the user.
+-- LocaleContextHolder holds the locale of the current request.
+
+Since a single request is a single thread, the context holder classes contain a Thread local object which contains info about the context, and is applicable to the current thread of execution, and hence applicable to the current request.
+
+Once the processing of the requests is over, make sure to clean the objects.
+------------------------------------------------------------------------------------------------------------------
+
+When should we declare a spring bean as prototype ? Is there any project example ? or scenario ? 
+
+------------------------------------------------------------------------------------------------------------------
+Topics : 
+Serialization, Exception handling
+Multithreading and java interview questions
+Check cache for 1-many relations , with lazy or eager fetch.
+
+Doubts: 
+CacheCorrencyStrategy 
+cascade = CascadeType.ALL, orphanRemoval = true
+
+Why @Service has to be given over class and not interface
+Why query is executed twice in first level cache -- named query
+------------------------------------------------------------------------------------------------------------------
+
+Topics to understand from HSR :
+Concurrent Collections etc - project examples from HSR
+Threading project examples from HSR
+Spring caching project examples 
+architecture
+
+
+
+
+ 

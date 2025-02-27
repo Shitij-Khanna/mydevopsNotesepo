@@ -1,0 +1,110 @@
+Example to read csv file :
+https://www.petrikainulainen.net/programming/spring-framework/spring-batch-tutorial-reading-information-from-a-file/
+
+General example of flow :
+https://github.com/nletts/spring-batch-example/blob/master/src/main/java/com/example/batch/TransportImportBatch.java
+
+Read data from DB :
+https://www.petrikainulainen.net/programming/spring-framework/spring-batch-tutorial-reading-information-from-a-database/
+
+Hibernate with batch useful link : 
+http://www.andersen-gott.com/2011/11/spring-batch-and-hibernate.html
+
+jar with maven :
+https://www.logicbig.com/tutorials/spring-framework/spring-boot/executable-jar-structure.html
+
+gradlew shadowJar  // to create complete jar-structure
+command to be executed : java -jar matching-tool-1.0.8-all.jar nl.eci.matching.app.Jobs importAdyenTransaction import.file=C:\\received_payments_report_2018_09_07 
+
+Hibernate queries:
+https://javabeat.net/three-ways-to-create-query-in-hibernate/
+https://javabeat.net/the-query-api-in-jpa-ejb-3-0/
+https://howtodoinjava.com/hibernate/hibernate-criteria-queries-tutorial/ --- Nice one
+
+https://www.javacodegeeks.com/2012/02/hibernate-cache-levels-tutorial.html
+
+Hibernate performance :
+https://www.thoughts-on-java.org/tips-to-boost-your-hibernate-performance/
+
+Caching : 
+https://vladmihalcea.com/jpa-hibernate-performance-issues/
+https://vladmihalcea.com/how-does-hibernate-store-second-level-cache-entries/
+https://vladmihalcea.com/hypersistence-optimizer-runtime-scanner/
+https://discourse.hibernate.org/t/hibernate-second-level-cache-for-many-many-relationship-in-a-joining-table/1480
+
+
+Gradle : 
+https://www.baeldung.com/gradle
+https://medium.com/liferay-engineering-brazil/gradle-basics-tutorial-dff1c0682875
+http://www.vogella.com/tutorials/Gradle/article.html
+
+
+For jobs with parameters : java -jar matching-tool-1.0.8-all.jar nl.eci.matching.app.Jobs importAdyenTransaction import.file=C:\\ecidocs\\received_payments_report_2018_10_15.csv
+
+For jobs without parameters : java -jar matching-tool-1.0.8-all.jar nl.eci.matching.app.Jobs -next matchAdyenTransactions
+Hello
+
+java -jar matching-tool-1.0.8-all.jar nl.eci.matching.app.Jobs matchAdyenTransactions
+
+
+Git project path: 
+/c/MyDocs/Microservices_Spring  is the path where microservices are created
+
+
+Spring Boot with Maven : 
+mvn spring-boot:run -Dspring-boot.run.arguments=--spring.application.instance_id=userMc1  // to pass runtime argument from command line, here 
+'spring.application.instance_id' is the name of the argument
+
+Nitish :
+https://github.com/NitishSri
+
+SET RABBIT_URI=amqp://localhost
+java -jar zipkin-server-2.19.3-exec.jar
+
+
+https://github.com/Baeldung/spring-security-registration/blob/master/src/main/java/org/baeldung/service/DeviceService.java
+
+Unit Testing : 
+Mockito
+Hamcrest matchers
+
+-- matching when method returns lists
+-- 
+
+https://www.ehcache.org/documentation/2.7/replication/rmi-replicated-caching.html
+https://www.quora.com/What-are-the-differences-between-Hibernate-and-Spring-Data-JPA
+https://www.quora.com/What-are-the-differences-between-Hibernate-and-Spring-Data-JPA
+
+CI/CD : https://www.youtube.com/watch?v=gdbA3vR2eDs,
+ For web hook: https://www.youtube.com/watch?v=CmwTPxdx24Y&list=PLy7NrYWoggjw_LIiDK1LXdNN82uYuuuiC&index=4
+CI/CD with K8s:https://www.youtube.com/watch?v=naUhXrV_rRA&list=PLH1ul2iNXl7uHUaB1iaXf_lHb7tQDh7Tt&index=8
+Install jenkins : 
+download Jenkins war file
+Go to setup directory : 
+run java -jar jenkins.war --httpPort=9090
+
+
+Notes: 
+Cache intershop : 
+ public void putObject(ORMObjectKey key, ORMObject value) : CacheManagerImpl
+ 
+ 
+Actuator url :
+http://localhost:8012/actuator
+http://localhost:8012/actuator/bus-refresh : POST request 
+
+My token secret : 
+dljj435nm324/nlk54/j64m3n
+
+Cryptography : 
+Add the JCE policy in JDK/ JRE / Security folder, restart java processes.
+Add required property in spring config server project for encryption.
+Add postman api for encrypt : post request to 8012/encrypt and pass the text as body to encrypt.
+When we receive the response, add it to the property with prefix : {cipher}.
+
+For asymmetric encryption, we need to generate a keypair, a public key for encryption and private key for decryption :
+Use command: 
+keytool -genkeypair -alias apiEncryptionKey -keyalg RSA\ -dname "CN=Shitij Khanna, OU=API Development,L=Amsterdam,S=AMS,C=NL"\
+-keypass 1q2w3e4r -keystore apiEncryptionKey.jks -storepass 1q2w3e4r
+
+keytool -importkeystore -srckeystore apiEncryptionKey.jks -destkeystore apiEncryptionKey.jks -deststoretype pkcs12

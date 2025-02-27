@@ -1,0 +1,53 @@
+Reference :
+https://github.com/dilipsundarraj1/kafka-for-developers-using-spring-boot/blob/master/SetUpKafka.md#start-zookeeper-and-kafka-broker-1
+
+https://github.com/dilipsundarraj1/kafka-for-developers-using-spring-boot/blob/master/SetUpKafka.md
+https://www.udemy.com/course/apache-kafka-for-developers-using-springboot/learn/lecture/17307822#overview
+
+Start Zookeeper and Kafka Broker
+All commands are present in directory : Navigate to /bin/windows directory 
+D:\Setups\Kafka\kafka_2.12-2.3.1\bin\windows
+
+Start up the Zookeeper.
+Navigate to /bin/windows directory 
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+
+Start server 
+Navigate to /bin/windows directory 
+kafka-server-start.bat ..\..\config\server.properties
+
+Before starting server, configure the listener url in /server.properties
+
+------------------------------------------------------------------------------------------------------------
+
+How to create a topic ?
+
+kafka-topics.bat --create --topic test-topic -zookeeper localhost:2181 --replication-factor 1 --partitions 4
+
+How to instantiate a Console Producer?
+Without Key
+
+kafka-console-producer.bat --broker-list localhost:9093 --topic test-topic
+
+With Key
+
+kafka-console-producer.bat --broker-list localhost:9093 --topic test-topic --property "key.separator=-" --property "parse.key=true"
+
+How to instantiate a Console Consumer?
+Without Key
+
+kafka-console-consumer.bat --bootstrap-server localhost:9093 --topic library-events --from-beginning
+
+With Key
+
+kafka-console-consumer.bat --bootstrap-server localhost:9093 --topic test-topic --from-beginning -property "key.separator= - " --property "print.key=true"
+
+------------------------------------------------------------------------------------------------------------
+
+Delete  a topic 
+kafka-topics.sh --bootstrap-server localhost:9093 --delete --topic first_topic
+
+Imp links and documents: 
+http://cloudurable.com/blog/kafka-architecture-consumers/index.html#:~:text=Kafka%20Consumer%20Groups&text=A%20consumer%20group%20has%20a,you%20have%20multiple%20consumer%20groups.
+
+http://mbukowicz.github.io/kafka/2020/09/12/implementing-kafka-consumer-in-java.html

@@ -1,0 +1,235 @@
+PIM : 
+
+SupplierAttribute:NoTFOptions:NoTFOptions:Value;            dataQuery{Product>NoTFOptions}
+
+ChangeSet : 
+- changeSet:
+    id: BOOKDEV-6923
+    author: nlpansha
+    comment: Define new status 269 for Leverancier Geblokkeerd vanwege ontbrekende inkoopprijs of adviesprijs
+    changes:
+      - sql:
+          sql: "INSERT INTO pime.state (statesn, stateno, stateid_jcatalog, description, oca, createdby, createdon, changedby, changedon) VALUES (nextval('statesn') , 269, 269, 'Leverancier: Geblokkeerd vanwege ontbrekende inkoopprijs of adviesprijs', 0, 1, now(), 1, now())"
+
+RBE : 
+QuantoreCatalogRBEProcess
+BlockQuantoreCountrySpecificRBERule
+SetCBAvailabilityDateFromSuppDelivFromDateRBERule
+
+https://wiki.novamedia.com/display/ECI/RBE+rule+descriptions
+
+    
+Test :
+QuantoreImportRBEIntegrationTest
+
+
+PIM : Story  : 
+db.changelog-modification.yaml : typedefinitoion and supplier attribute
+PRD file in resources /import / quantore : PRD :  mapping 
+changeSet:
+    id: BOOKDEV-6923
+	
+
+Type definitions and supplier attributes are product attributes per suppliers, and type definitions defines what type of attributes they are.
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Image Processing : 
+FileSystemImageCollectorTest
+1. testFileSystemImageCollector  -- 
+Collects files from an input location and outputs them to another location . 
+
+Task :  /**
+     * This function processes the image via the following steps:
+     * - filter only files that match a EAN that's present in PIM.
+     * - Add a prefix with the catalogId to the filename.
+     * - If the catalog is EciContent and the product doesn't yet exist, create it.
+     * - Delete the original input file.
+     */
+	 
+Process  : fileSystemImageCollector.processFile(inputImageFile, Mockito.mock(StepContribution.class));
+It is expecting product files with the name supplier product id, and adds the catalog name as a prefix to the files...
+
+Resizer : 
+testImageResizer
+creates files in locations : ean/100, ean/200, carrousel/fullsize/
+
+Processes every type of image for a product. there are 3 types of images for every product, defined in ImageProcessingConstants.FileTypes (ean , back, inlay)
+Class ImageResizer : line 87
+For every type if image it calls the function : processImageForFileType(product, fileType, subDirectory); // where subdirectory name is the 4 last digits of the product id (can be an issue if there are products with the same last 3 digits)
+
+processImageForFileType:
+1. Looks up import directory
+2. Import directory is : file type (like ean / back / inlay) / subdirectory (last 3 digits of the product ean)
+3. Finds all images matching the productID in the import directory
+4. If empty - >No image files found for product {} in directory {}  Erro
+5. If not empty : 	Finds best image from the list of images found : ImageResizer - line 117 (findBestImage(masterCopyImportFiles))
+6. If no best image found --> LOG : No best mastercopy file found for product {} in directory {}
+7. If best image found ,   processFile(selectedMasterCopyFile, product.getProductId(), fileType);
+	 * This function copies and resizes the image via the following steps: - selects the 'best' image (widest or latest, ECI Content image is always preferred). - copy images to a
+     * directory according to file type: /ean, /inlay, or /back. - create 60, 100, 200, 300 versions of the image. - create a fullsize (=original, max 500) and thumbnail (=100) for
+     * the image carrousel
+ 7.1 
+
+
+What are  ean / back / inlay ?? Do we use them ?
+The resize job looks for images in these 3 folders : ean, back and inlay, and it puts images in carousel folder, with _back, _inlay etc.
+However, the correction job is putting files in mastercopy/ean, and not mastercopy/back and mastercopy/inlay.
+So how are images put in  mastercopy/back and mastercopy/inlay, so that they are being picked up by the resize job 	? 
+
+
+4.1.6 and 5.19
+Page 25 technical doc
+Page 31 technical doc, Page 40 technical doc, example pictures xml file
+
+Also discuss with Wietse
+
+0028947835004
+	
+	
+	
+	820451 - p3
+	
+	1. Question : Delta files from Quantore possible ? 
+	-----------------------------------------------------------------------------
+	
+	   1 a. Add supplier attribute imageId for product.. 
+	     b. Configure import QuantoreIMG . File : Pictures.xml. Importidentifier : img
+	     c. Adjust the import stream for Quantore to import the images. ( AAAPime_60 )
+	     d. Add RBE rule to convert the imageid attribute to url and store in producturl table with Type id : FrontCoverImageUrl(same as CB)
+	   
+	   2. a. Create a collector job : ProductFTPUrlImageCollector to download image from the urls . Use this for downloading Quantore images. 
+			Reuse the FTP connection so that new connections are not created everytime.
+	      b. A new stream to do the image processing for Quantore. (Should be more or less the same as CB) 
+	   	   Once the collector has run successfully, the correction and resize jobs should work as it is.
+		   
+		   For point 2.a we need a POC :
+		   1. if we can reuse the http request
+		   2. try FTP wth single connection.
+				if 2 is the way to go : 
+				3. the check if we are able to retrieve lastmodified for all images in one process, or we have to do that weekly ?  		   
+	   -----------------------------------------------------------------------------
+	   
+	3. POC for importing other images    
+	   
+1> IMPORTIDENTIFIER
+ProductImportXmlJobFactory
+QuantoreImportJobIntegrationTest
+QuantoreAllFileTypesImportJobIntegrationTest	 
+
+	 
+Quantore : 
+AAA Pim E 60
+	 
+General : 
+Factory : 
+ProductImportFlatJobFactory
+QuantoreCatalogRBEProcess
+JobFactory
+BatchConfiguration
+AbstractJobFactory
+
+ProductImportXMLJobFactory, and XMLFileItemReaderFactory -- to get reader
+JSoupElementtoAdapterNodeDecorator	 
+
+ProductFeed : 
+ProductFeedsJobFactory
+GeneralFeedDto
+OogstFeedMapper.java
+java/nl/eci/pime/meta/mapper/OogstFeedMapperTest.java
+java/nl/eci/pime/integration/productfeeds/OogstFeedsIntegrationTest.java
+
+uitgever - fill in both nl and be feeds
+check timessold how is it populated? 
+
+nl and be are separaate feeds
+no of pages - new attribute (no of pages in the book)
+authorlink - nice to have
+
+[3:58 PM] Pierre van Berkel
+    
+select ps.personsn, ps.name
+from product p
+join product2person p2ps on p2ps.productsn = p.productsn
+join person ps on ps.personsn = p2ps.personsn
+where p.productsn = 203028018
+;
+​[4:02 PM] Pierre van Berkel
+    
+201115321
+
+
+https://novamedia-jira.atlassian.net/browse/BOOKDEV-8771
+
+preferredsuppliercatalogid = Quantore -> bruna
+
+PIM ! : 
+nlrobvan
+password
+
+Conversion Framework :
+
+https://audaxdigitaal.atlassian.net/wiki/spaces/ECI/pages/1088751888/ConvertSupplierAttributesRBERule
+
+https://audaxdigitaal.atlassian.net/wiki/spaces/ECI/pages/1088752153/BlockLanguageRBERule
+
+ConvertSupplierAttributesRBERule -- exntend Test also
+
+Also extend test for RBE catalog -- VanditmarImportRBEIntegrationTest
+
+SSH Key for FE : 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDGeetYkjwlujlSxxMUUw735OaonD7wMdheeGVl/jxWyg7Xj5q848Y0Lsvx7QbohzblofB6NtUxZL68EbH8Hn5Y0FcPzYDHAUbs5PJhri+6XoYM2sBmJd++TniEitpEgnQW+h54M+e8ZTieOMIIEFCCI2fvANLA0M49zNUgWl0VRpBLaKvyMbSnrJbydxDgZWVEWPgklG2wJwiooWp/jiZB+9dxMAl5kJqGutaQWdD7mqMiwH2gJ+UavcBsGCS8S3D27rcvPRg3Pq3lPb6aXDOUSVF+d1nf2iL2pyavrTiKfnX0kChxYnZcT1fIk/7IiJ70ebLp+mILYm+dW+Z+5tcqPkkpBQEosTHapH/xbH49BM3RWC1Rk2wOTgM7dGhxDiT8l56VBJX5fhCm+hIaSw8GXOdjKXpR/fGL60JuqvyH7s5poPfKUVcq/0mvrz/Xhesk8f7f2/QN27FdpubLuAP9E+pYopu6XfZ80/Ts0dnBMdzobKHDOCT+CLx+MwGsvrmkg4jkVTkKfMrqUudrHnG92zySHLu0yCWVJ1w1JKIkqQ/xOUVldglvWxpMLnD3rWgNFEH2rWN0DhweauWDDndA8DexyAtb57dC65pUoqREym5AhVvJ6kh4hYZ9txRBtNL1CMFjzgoBx+ZwO+vAUcEuMGAOkyvtXgUhda/4X2ahFQ== shitij.khanna@bookspot.nl
+
+
+Technical tab : 
+api/products/203773202/tabs/technical-details
+overview:true
+TechnicalDetailsTabRestTest : technical tab test
+
+Fusion Test : 
+FusionJobIntegrationTest : Fusion Test
+ProductFusionJobFactory - Batch
+Fusion Query :
+SELECT p.productsn FROM product p JOIN catalog c ON p.catalogsn = c.catalogsn WHERE c.catalogid = 'CB' AND (    p.stateno = 200 OR (p.stateno NOT IN (100,200,400,420,430) AND p.indproductfused = true) ) ORDER BY p.changedon
+
+
+APIs:
+
+http://newb-acm1-at1-pim.audaxdc.local/api/products/206155135/tabs/general
+http://newb-acm1-at1-pim.audaxdc.local/api/products/206145320/tabs/technical-details
+http://newb-acm1-at1-pim.audaxdc.local/api/products/206155135/tabs/technical-details?overview=true
+
+Supplier Availability :
+SupplierAvailabilityQueryConfigService
+SupplierAvailability.xlxs
+DeterminePreferredSupplierRBERule
+
+Profitwonen
+
+
+
+
+Supplier Availability Rule :
+
+ final Field field = AspectUtils.unwrapProxy(configurator).getClass().getSuperclass().getDeclaredField("parameters");
+        field.setAccessible(true);
+
+        final Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        int modifiers = modifiersField.getInt(field);
+
+        modifiers &= ~Modifier.FINAL;
+        modifiersField.setInt(field, modifiers);
+
+        field.set(AspectUtils.unwrapProxy(configurator), parameters);
+        field.setAccessible(false);
+		
+		
+Availability supplier xlxs :		
+1.Query Field name from file 		: Which column is Shop only ?
+2.C1, C2 etc represent what >> operators ? but what do they compare to ?
+
+3.Date - GT ?
+4.
+
+
